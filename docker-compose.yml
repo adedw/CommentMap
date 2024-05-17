@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  commentmap.mvc:
+    image: ${DOCKER_REGISTRY-}commentmapmvc
+    build:
+      context: .
+      dockerfile: CommentMap.Mvc/Dockerfile
