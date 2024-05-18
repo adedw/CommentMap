@@ -101,7 +101,7 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage
                 var identityResult = await _userManager.SetUserNameAsync(user, Input.NewUserName);
                 if (!identityResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to update username.";
+                    StatusMessage = "Error when trying to update username.";
                     return RedirectToPage();
                 }
             }

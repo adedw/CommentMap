@@ -1,4 +1,5 @@
 using CommentMap.Mvc.Data;
+using CommentMap.Mvc.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,16 @@ builder.Services
     .AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.Configure<IdentityOptions>(options => options.Lockout.AllowedForNewUsers = false);
+builder.Services
+    .AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        var googleAuthenticationOptions = builder.Configuration
+            .GetSection("Authentication:Google")
+            .Get<GoogleAuthenticationOptions>();
+        googleOptions.ClientId = googleAuthenticationOptions.ClientId;
+        googleOptions.ClientSecret = googleAuthenticationOptions.ClientSecret;
+    });
 
 var mvcBuilder = builder.Services.AddRazorPages();
 
