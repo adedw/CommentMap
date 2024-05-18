@@ -154,11 +154,11 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage
 
             SharedKey = FormatKey(unformattedKey);
 
-            var email = await _userManager.GetEmailAsync(user);
-            AuthenticatorUri = GenerateQrCodeUri(email, unformattedKey);
+            var userName = await _userManager.GetUserNameAsync(user);
+            AuthenticatorUri = GenerateQrCodeUri(userName, unformattedKey);
         }
 
-        private string FormatKey(string unformattedKey)
+        private static string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
             int currentPosition = 0;
@@ -175,13 +175,13 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage
             return result.ToString().ToLowerInvariant();
         }
 
-        private string GenerateQrCodeUri(string email, string unformattedKey)
+        private string GenerateQrCodeUri(string userName, string unformattedKey)
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("Microsoft.AspNetCore.Identity.UI"),
-                _urlEncoder.Encode(email),
+                _urlEncoder.Encode("CommentMap"),
+                _urlEncoder.Encode(userName),
                 unformattedKey);
         }
     }

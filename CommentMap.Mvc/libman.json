@@ -11,7 +11,6 @@
       ]
     },
     {
-      "provider": "unpkg",
       "library": "jquery-validation@1.20.0",
       "destination": "wwwroot/lib/jquery-validation/",
       "files": [
@@ -19,7 +18,6 @@
       ]
     },
     {
-      "provider": "unpkg",
       "library": "jquery-validation-unobtrusive@4.0.0",
       "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
       "files": [
@@ -27,7 +25,6 @@
       ]
     },
     {
-      "provider": "unpkg",
       "library": "bootstrap@5.3.3",
       "destination": "wwwroot/lib/bootstrap/",
       "files": [
@@ -35,6 +32,13 @@
         "dist/css/bootstrap.min.css.map",
         "dist/js/bootstrap.bundle.min.js.map",
         "dist/js/bootstrap.bundle.min.js"
+      ]
+    },
+    {
+      "library": "qrcodejs@1.0.0",
+      "destination": "wwwroot/lib/qrcodejs/",
+      "files": [
+        "qrcode.min.js"
       ]
     }
   ]
