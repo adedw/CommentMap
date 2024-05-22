@@ -1,8 +1,36 @@
-version: '3.4'
-
 services:
-  commentmap.mvc:
-    image: ${DOCKER_REGISTRY-}commentmapmvc
+  postgres:
+    container_name: postgres
+    image: postgres:16-alpine3.18
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: comment-map
+      POSTGRES_USER: comment-map
+      POSTGRES_PASSWORD: P@ssw0rd
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  commentmap-mvc:
+    image: ghcr.io/adedw/commentmap-mvc:master
     build:
       context: .
       dockerfile: CommentMap.Mvc/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=comment-map;Username=comment-map;Password=P@ssw0rd"
+      Logging__LogLevel__Default: Information
+      Logging__LogLevel__Microsoft.AspNetCore: Warning
+      Logging__LogLevel__Microsoft.EntityFrameworkCore: Warning
+      AllowedHosts: "*"
+      ASPNETCORE_HTTP_PORTS: 8080
+      ASPNETCORE_HTTPS_PORTS: 8081
+      ASPNETCORE_ENVIRONMENT: Release
+    container_name: commentmap-mvc
+    ports:
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8081"
+
+volumes:
+  pg-data:
