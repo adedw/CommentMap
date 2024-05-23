@@ -1,17 +1,17 @@
 ﻿<ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <a id="profile" class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" asp-page="./Index">Edit profile</a>
+        <a class="nav-link" asp-page="Index" asp-active-pages="Index">Edit profile</a>
     </li>
     <li class="nav-item">
-        <a id="change-password" class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" asp-page="./ChangePassword">Password</a>
+        <a class="nav-link" asp-page="ChangePassword" asp-active-pages="ChangePassword,SetPassword">Password</a>
     </li>
     <li class="nav-item">
-        <a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a>
+        <a class="nav-link" asp-page="ExternalLogins" asp-active-pages="ExternalLogins">External logins</a>
     </li>
     <li class="nav-item">
-        <a id="two-factor" class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" asp-page="./TwoFactorAuthentication">Two-factor authentication</a>
+        <a class="nav-link" asp-page="TwoFactorAuthentication" asp-active-pages="TwoFactorAuthentication,EnableAuthenticator,ResetAuthenticator,ShowRecoveryCodes,GenerateRecoveryCodes,Disable2fa">Two-factor authentication</a>
     </li>
     <li class="nav-item">
-        <a id="personal-data" class="nav-link @ManageNavPages.DeleteProfileNavClass(ViewContext)" asp-page="./DeleteProfile">Delete profile</a>
+        <a class="nav-link" asp-page="DeleteProfile" asp-active-pages="DeleteProfile">Delete profile</a>
     </li>
 </ul>
