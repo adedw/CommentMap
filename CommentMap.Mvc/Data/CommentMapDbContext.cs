@@ -12,7 +12,6 @@ public class CommentMapDbContext(DbContextOptions<CommentMapDbContext> options) 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.HasPostgresExtension("postgis");
         builder.ApplyConfiguration(new CommentConfiguration());
     }
 }
