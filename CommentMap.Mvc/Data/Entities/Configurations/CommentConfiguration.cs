@@ -15,7 +15,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(c => c.Location).HasColumnType("geometry (point)");
+        builder.HasIndex(c => c.Location).HasMethod("gist");
 
+        builder.Property(c => c.Title).HasMaxLength(250);
         builder.Property(c => c.Text).HasMaxLength(250);
+        builder.Property(c => c.CreatedAt).HasDefaultValueSql("NOW()");
     }
 }
