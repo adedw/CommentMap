@@ -1,7 +1,8 @@
 using CommentMap.Mvc.Data;
+using CommentMap.Mvc.Data.Entities;
+using CommentMap.Mvc.Extensions.DependencyInjection;
 using CommentMap.Mvc.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 try
@@ -15,13 +16,11 @@ try
     // Add services to the container.
     builder.Services.AddSerilog();
 
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
-    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+    builder.Services.AddCommentMapDbContext("DefaultConnection");
 
     builder.Services
-        .AddDefaultIdentity<IdentityUser>()
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddDefaultIdentity<User>()
+        .AddEntityFrameworkStores<CommentMapDbContext>();
     builder.Services.Configure<IdentityOptions>(options => options.Lockout.AllowedForNewUsers = false);
     builder.Services
         .AddAuthentication()
