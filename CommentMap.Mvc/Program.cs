@@ -16,7 +16,8 @@ try
     // Add services to the container.
     builder.Services.AddSerilog();
 
-    builder.Services.AddCommentMapDbContext("DefaultConnection");
+    var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddCommentMapDbContext(defaultConnectionString);
 
     builder.Services
         .AddDefaultIdentity<User>()
