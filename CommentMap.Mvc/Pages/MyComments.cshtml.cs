@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CommentMap.Mvc.Pages;
 
 [Authorize]
-public class PrivateModel : PageModel
+public class MyCommentsModel : PageModel
 {
-    private readonly ILogger<PrivateModel> _logger;
+    private readonly ILogger<MyCommentsModel> _logger;
 
-    public PrivateModel(ILogger<PrivateModel> logger)
+    public MyCommentsModel(ILogger<MyCommentsModel> logger)
     {
         _logger = logger;
     }
