@@ -33,13 +33,6 @@
         "dist/js/bootstrap.bundle.min.js.map",
         "dist/js/bootstrap.bundle.min.js"
       ]
-    },
-    {
-      "library": "qrcodejs@1.0.0",
-      "destination": "wwwroot/lib/qrcodejs/",
-      "files": [
-        "qrcode.min.js"
-      ]
     }
   ]
 }

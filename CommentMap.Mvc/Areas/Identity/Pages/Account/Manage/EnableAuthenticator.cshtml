@@ -21,8 +21,7 @@
         </li>
         <li>
             <p>Scan the QR Code or enter this key <kbd>@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-            <div id="qrCode"></div>
-            <div id="qrCodeData" data-url="@Model.AuthenticatorUri"></div>
+            <img src="@Model.QrCode" alt="@Model.AuthenticatorUri" class="img-fluid" />
         </li>
         <li>
             <p>
@@ -48,7 +47,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
-    <script type="text/javascript" src="~/lib/qrcodejs/qrcode.min.js"></script>
-    <script type="text/javascript" src="~/js/qr.js"></script>
 }
