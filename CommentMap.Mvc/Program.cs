@@ -2,7 +2,9 @@ using CommentMap.Mvc.Data;
 using CommentMap.Mvc.Data.Entities;
 using CommentMap.Mvc.Extensions.DependencyInjection;
 using CommentMap.Mvc.Models;
+using CommentMap.Mvc.Services;
 using Microsoft.AspNetCore.Identity;
+using QRCoder;
 using Serilog;
 
 try
@@ -33,6 +35,8 @@ try
             googleOptions.ClientId = googleAuthenticationOptions.ClientId;
             googleOptions.ClientSecret = googleAuthenticationOptions.ClientSecret;
         });
+    builder.Services.AddSingleton<QRCodeGenerator>();
+    builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 
