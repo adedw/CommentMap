@@ -37,6 +37,7 @@ try
         });
     builder.Services.AddSingleton<QRCodeGenerator>();
     builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
+    builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 

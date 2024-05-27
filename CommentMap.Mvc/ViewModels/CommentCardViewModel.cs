@@ -7,4 +7,4 @@ public record CommentCardViewModel(
     string Text,
     DateTime CreatedAt);
 
-public record Coordinates(decimal Latitude, decimal Longitude);
+public record Coordinates(double Latitude, double Longitude);

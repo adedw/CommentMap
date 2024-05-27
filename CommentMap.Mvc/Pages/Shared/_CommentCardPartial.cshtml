@@ -3,23 +3,21 @@
 @model CommentCardViewModel
 
 @{
-    var elapsedInterval = DateTime.Now - Model.CreatedAt;
+    var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
 }
 
-<div class="card">
+<div class="card px-0">
     <h5 class="card-header">@Model.Title</h5>
     <div class="card-body">
         <p class="card-text">@Model.Text</p>
-        <div class="d-flex flex-row align-items-center flex-wrap gap-1">
-            <a asp-page="/EditComment" class="btn btn-light" role="button">
+        <div class="btn-group" role="group" aria-label="Card actions">
+            <a asp-page="/Comments/Edit" asp-route-id="@Model.Id" class="btn btn-light" title="Edit" role="button">
                 <i class="bi bi-pencil-fill"></i>
             </a>
-            <form method="post" asp-page-handler="DeleteComment" asp-route-id="@Model.Id">
-                <button type="submit" class="btn btn-danger" title="Delete">
-                    <i class="bi bi-trash-fill"></i>
-                </button>
-            </form>
+            <a asp-page="/Comments/Delete" asp-route-id="@Model.Id" class="btn btn-danger" title="Delete" role="button">
+                <i class="bi bi-trash-fill"></i>
+            </a>
         </div>
     </div>
-    <div class="card-footer text-muted">@DateTime.Now.Subtract(elapsedInterval).Humanize()</div>
+    <div class="card-footer text-muted">@DateTime.UtcNow.Subtract(elapsedInterval).Humanize()</div>
 </div>

@@ -1,0 +1,32 @@
+﻿@page
+@using CommentMap.Mvc.ViewModels
+@model IndexModel
+@{
+
+    ViewData["Title"] = "My comments";
+}
+
+<h1>My comments</h1>
+
+@if (Model.Comments is not null && Model.Comments.Count > 0)
+{
+    <div class="row row-cols-2">
+        <div class="col-lg-6 col-5">
+            <div class="row row-cols-lg-2 row-cols-1">
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="col mb-3">
+                        <partial name="_CommentCardPartial" model="comment" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-6 col-7">
+            <!-- TODO: display this comments on map -->
+        </div>
+    </div>
+}
+else
+{
+    <h2>There is no comments :(</h2>
+}
