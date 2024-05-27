@@ -22,9 +22,20 @@ try
     builder.Services.AddCommentMapDbContext(defaultConnectionString);
 
     builder.Services
-        .AddDefaultIdentity<User>()
+        .AddIdentity<User, Role>(options =>
+        {
+            options.Stores.MaxLengthForKeys = 128;
+            options.SignIn.RequireConfirmedAccount = false;
+            options.Lockout.AllowedForNewUsers = false;
+        })
+        .AddDefaultTokenProviders()
         .AddEntityFrameworkStores<CommentMapDbContext>();
-    builder.Services.Configure<IdentityOptions>(options => options.Lockout.AllowedForNewUsers = false);
+    builder.Services.ConfigureApplicationCookie(options =>
+    {
+        options.LoginPath = "/Identity/Account/Login";
+        options.LogoutPath = "/Identity/Account/Logout";
+        options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    });
     builder.Services
         .AddAuthentication()
         .AddGoogle(googleOptions =>
@@ -37,6 +48,7 @@ try
         });
     builder.Services.AddSingleton<QRCodeGenerator>();
     builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
+
     builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
