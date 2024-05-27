@@ -33,6 +33,15 @@
         "dist/js/bootstrap.bundle.min.js.map",
         "dist/js/bootstrap.bundle.min.js"
       ]
+    },
+    {
+      "library": "bootstrap-icons@1.11.3",
+      "destination": "wwwroot/lib/bootstrap-icons/",
+      "files": [
+        "font/fonts/bootstrap-icons.woff",
+        "font/fonts/bootstrap-icons.woff2",
+        "font/bootstrap-icons.min.css"
+      ]
     }
   ]
 }

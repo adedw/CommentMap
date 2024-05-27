@@ -1,0 +1,23 @@
+﻿@using CommentMap.Mvc.ViewModels
+@using Humanizer
+@model CommentCardViewModel
+
+@{
+    var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
+}
+
+<div class="card px-0">
+    <h5 class="card-header">@Model.Title</h5>
+    <div class="card-body">
+        <p class="card-text">@Model.Text</p>
+        <div class="btn-group" role="group" aria-label="Card actions">
+            <a asp-page="/Comments/Edit" asp-route-id="@Model.Id" class="btn btn-light" title="Edit" role="button">
+                <i class="bi bi-pencil-fill"></i>
+            </a>
+            <a asp-page="/Comments/Delete" asp-route-id="@Model.Id" class="btn btn-danger" title="Delete" role="button">
+                <i class="bi bi-trash-fill"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-footer text-muted">@DateTime.UtcNow.Subtract(elapsedInterval).Humanize()</div>
+</div>

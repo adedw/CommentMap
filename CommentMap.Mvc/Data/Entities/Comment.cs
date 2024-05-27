@@ -11,7 +11,9 @@ public class Comment : IEquatable<Comment>
 
     public required Point Location { get; set; }
 
+    public required string Title { get; set; }
     public required string Text { get; set; }
+    public required DateTime CreatedAt { get; init; }
 
     public bool Equals(Comment? other)
     {
