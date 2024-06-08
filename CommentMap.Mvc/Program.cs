@@ -53,11 +53,6 @@ try
 
     var mvcBuilder = builder.Services.AddRazorPages();
 
-    if (builder.Environment.IsDevelopment())
-    {
-        mvcBuilder.AddRazorRuntimeCompilation();
-    }
-
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.

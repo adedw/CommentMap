@@ -11,7 +11,7 @@
     "@types/jquery-validation-unobtrusive": "^3.2.35",
     "@types/jquery.validation": "^1.16.10",
     "esbuild": "^0.21.4",
-    "eslint": "9.x",
+    "eslint": "^8.56.0",
     "globals": "^15.4.0",
     "ol": "^9.2.4",
     "typescript-eslint": "^7.12.0"
