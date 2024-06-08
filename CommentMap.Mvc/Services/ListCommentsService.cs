@@ -11,7 +11,7 @@ public class ListCommentsService(ICommentMapDbContext dbContext) : IListComments
         var comments = await dbContext.Comments
             .Where(c => c.UserId == userId)
             .OrderBy(c => c.Id)
-            .Select(c => new CommentCardViewModel(c.Id, new Coordinates(c.Location.X, c.Location.Y), c.Title, c.Text, c.CreatedAt))
+            .Select(c => new CommentCardViewModel(c.Id, new Location { Latitude = c.Location.Y, Longitude = c.Location.Y }, c.Title, c.Text, c.CreatedAt))
             .ToListAsync(cancellationToken);
         return comments;
     }

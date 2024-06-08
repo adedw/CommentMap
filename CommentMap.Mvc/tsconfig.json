@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": [ "DOM", "ES6" ],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext"
+  },
+  "include": [
+    "./Scripts/**/*"
+  ]
+}

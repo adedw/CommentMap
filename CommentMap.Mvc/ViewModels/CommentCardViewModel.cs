@@ -1,10 +1,20 @@
-﻿namespace CommentMap.Mvc.ViewModels;
+﻿using System.Text.Json.Serialization;
+
+namespace CommentMap.Mvc.ViewModels;
 
 public record CommentCardViewModel(
     Guid Id,
-    Coordinates Location,
+    Location Location,
     string Title,
     string Text,
     DateTime CreatedAt);
 
-public record Coordinates(double Latitude, double Longitude);
+
+public record Location
+{
+    [JsonPropertyName("latitude")]
+    public double Latitude { get; init; }
+
+    [JsonPropertyName("longitude")]
+    public double Longitude { get; init; }
+}
