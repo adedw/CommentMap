@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # QGIS Projects
 *.qgz
+
+# Yarn internal files
+.yarn/

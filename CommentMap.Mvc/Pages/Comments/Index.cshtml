@@ -22,11 +22,15 @@
             </div>
         </div>
         <div class="col-lg-6 col-7">
-            <!-- TODO: display this comments on map -->
+            <div id="map"></div>
         </div>
     </div>
 }
 else
 {
     <h2>There is no comments :(</h2>
+}
+
+@section Scripts {
+    <script src="~/js/comments.min.js" asp-append-version="true"></script>
 }
