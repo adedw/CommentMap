@@ -1,12 +1,14 @@
 ﻿@using CommentMap.Mvc.ViewModels
 @using Humanizer
+@using System.Text.Json
 @model CommentCardViewModel
 
 @{
     var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
+    var location = JsonSerializer.Serialize(@Model.Location);
 }
 
-<div class="card px-0">
+<div class="card px-0" data-location="@location">
     <h5 class="card-header">@Model.Title</h5>
     <div class="card-body">
         <p class="card-text">@Model.Text</p>
