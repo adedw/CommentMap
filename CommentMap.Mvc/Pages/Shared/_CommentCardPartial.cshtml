@@ -13,6 +13,9 @@
     <div class="card-body">
         <p class="card-text">@Model.Text</p>
         <div class="btn-group" role="group" aria-label="Card actions">
+            <button type="button" class="btn btn-light" title="Find on map">
+                <i class="bi bi-geo-alt-fill"></i>
+            </button>
             <a asp-page="/Comments/Edit" asp-route-id="@Model.Id" class="btn btn-light" title="Edit" role="button">
                 <i class="bi bi-pencil-fill"></i>
             </a>
