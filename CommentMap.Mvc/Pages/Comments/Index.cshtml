@@ -6,6 +6,10 @@
     ViewData["Title"] = "My comments";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/ol.min.css" asp-append-version="true" />
+}
+
 <h1>My comments</h1>
 
 @if (Model.Comments is not null && Model.Comments.Count > 0)
@@ -22,7 +26,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-7">
-            <div id="map"></div>
+            <div id="map" class="sticky-top"></div>
         </div>
     </div>
 }
