@@ -1,9 +1,12 @@
 ﻿import * as esbuild from "esbuild";
 
 await esbuild.build({
-    entryPoints: ["./Scripts/comments.ts"],
-    bundle: true,
-    minify: true,
-    sourcemap: true,
-    outfile: "./wwwroot/js/comments.min.js",
-})
+  entryPoints: {
+    "js/comments.min": "./Scripts/comments.ts",
+    "css/ol.min": "./node_modules/ol/ol.css"
+  },
+  bundle: true,
+  minify: true,
+  sourcemap: true,
+  outdir: "./wwwroot",
+});
