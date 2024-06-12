@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.Text.Json.Serialization;
 
 namespace CommentMap.Mvc.ViewModels;
 
@@ -9,12 +10,13 @@ public record CommentCardViewModel(
     string Text,
     DateTime CreatedAt);
 
-
 public record Location
 {
     [JsonPropertyName("latitude")]
-    public double Latitude { get; init; }
+    [ValidateNever]
+    public double? Latitude { get; init; }
 
     [JsonPropertyName("longitude")]
-    public double Longitude { get; init; }
+    [ValidateNever]
+    public double? Longitude { get; init; }
 }
