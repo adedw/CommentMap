@@ -12,6 +12,17 @@
 
 <h1>My comments</h1>
 
+<nav class="navbar navbar-expand" aria-label="Comments actions">
+    <ul class="navbar-nav gap-2">
+        <li class="nav-item">
+            <a class="btn btn-outline-primary" role="button" asp-page="/Comments/Add">
+                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
+                <span>Add</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
 @if (Model.Comments is not null && Model.Comments.Count > 0)
 {
     <div class="row row-cols-2">
@@ -26,7 +37,7 @@
             </div>
         </div>
         <div class="col-lg-6 col-7">
-            <div id="map" class="sticky-top"></div>
+            <div id="map" class="sticky-top mw-100 vh-100"></div>
         </div>
     </div>
 }
