@@ -4,25 +4,28 @@
 @model CommentCardViewModel
 
 @{
-    var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
-    var location = JsonSerializer.Serialize(@Model.Location);
+  var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
+  var location = JsonSerializer.Serialize(@Model.Location);
 }
 
 <div class="card px-0" data-location="@location">
-    <h5 class="card-header">@Model.Title</h5>
-    <div class="card-body">
-        <p class="card-text">@Model.Text</p>
-        <div class="btn-group" role="group" aria-label="Card actions">
-            <button type="button" class="btn btn-light" title="Find on map">
-                <i class="bi bi-geo-alt-fill"></i>
-            </button>
-            <a asp-page="/Comments/Edit" asp-route-id="@Model.Id" class="btn btn-light" title="Edit" role="button">
-                <i class="bi bi-pencil-fill"></i>
-            </a>
-            <a asp-page="/Comments/Delete" asp-route-id="@Model.Id" class="btn btn-danger" title="Delete" role="button">
-                <i class="bi bi-trash-fill"></i>
-            </a>
-        </div>
+  <h5 class="card-header">@Model.Title</h5>
+  <div class="card-body">
+    <p class="card-text">@Model.Text</p>
+    <div class="btn-group" role="group" aria-label="Card actions">
+      <button type="button" class="btn btn-light" title="Find on map">
+        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+        <span class="visually-hidden">Find on map</span>
+      </button>
+      <a asp-page="/Comments/Edit" asp-route-id="@Model.Id" class="btn btn-light" title="Edit" role="button">
+        <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+        <span class="visually-hidden">Edit</span>
+      </a>
+      <a asp-page="/Comments/Delete" asp-route-id="@Model.Id" class="btn btn-danger" title="Delete" role="button">
+        <i class="bi bi-trash-fill" aria-hidden="true"></i>
+        <span class="visually-hidden">Delete</span>
+      </a>
     </div>
-    <div class="card-footer text-muted">@DateTime.UtcNow.Subtract(elapsedInterval).Humanize()</div>
+  </div>
+  <div class="card-footer text-muted">@DateTime.UtcNow.Subtract(elapsedInterval).Humanize()</div>
 </div>
