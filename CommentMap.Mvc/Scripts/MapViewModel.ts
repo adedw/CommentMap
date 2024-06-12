@@ -6,9 +6,9 @@ import { Icon, Style } from "ol/style";
 import type { Location } from "./types";
 
 export class MapViewModel {
-  private static NullCoordinate: Coordinate = [0, 0];
+  private static readonly NullCoordinate: Coordinate = [0, 0];
 
-  private static IconStyle = new Style({
+  private static readonly IconStyle = new Style({
     image: new Icon({
       anchor: [0.5, 22],
       anchorXUnits: "fraction",
@@ -36,9 +36,9 @@ export class MapViewModel {
   }
 
   public getPointFeatures(): Feature<Point>[] {
-    return this._coordinates.map((coordinates) => {
+    return this._coordinates.map((coordinate) => {
       const feature = new Feature({
-        geometry: new Point(coordinates),
+        geometry: new Point(coordinate),
       });
       feature.setStyle(MapViewModel.IconStyle);
       return feature;
