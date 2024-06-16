@@ -1,8 +1,8 @@
-﻿using CommentMap.Mvc.Services;
+﻿using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.Services;
 using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace CommentMap.Mvc.Pages.Comments;
 
@@ -13,9 +13,8 @@ public class IndexModel(IListCommentsService listCommentsService) : PageModel
 
     public async Task<PageResult> OnGetAsync(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var userGuid = Guid.ParseExact(userId, "D");
-        Comments = await listCommentsService.GetAllUserComments(userGuid, cancellationToken);
+        var userId = User.FindUserId();
+        Comments = await listCommentsService.GetAllUserComments(userId, cancellationToken);
         return Page();
     }
 }

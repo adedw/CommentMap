@@ -15,5 +15,5 @@ public class AddNewCommentInput
     public string? Text { get; init; }
     
     [LocationRequired]
-    public required Location Location { get; init; }
+    public required LocationViewModel Location { get; init; }
 }
