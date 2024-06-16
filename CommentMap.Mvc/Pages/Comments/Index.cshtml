@@ -25,7 +25,7 @@
 
 @if (Model.Comments is not null && Model.Comments.Count > 0)
 {
-    <div class="row row-cols-2">
+    <div class="row row-cols-2" id="root">
         <div class="col-lg-6 col-5">
             <div class="row row-cols-lg-2 row-cols-1">
                 @foreach (var comment in Model.Comments)
@@ -47,5 +47,6 @@ else
 }
 
 @section Scripts {
-    <script src="~/js/comments.min.js" asp-append-version="true"></script>
+    <script src="~/lib/knockout/build/output/knockout-latest.min.js"></script>
+    <script src="~/js/Comments.min.js" asp-append-version="true"></script>
 }
