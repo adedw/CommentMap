@@ -11,7 +11,7 @@
 
 <h1>Add new comment</h1>
 
-<div class="row row-cols-2">
+<div class="row row-cols-2" id="root">
     <div class="col-lg-6 col-5">
         <form method="post">
             <div class="mb-2">
@@ -34,8 +34,8 @@
 
             <button type="submit" class="btn btn-primary">Create</button>
 
-            <input type="hidden" asp-for="Input.Location.Longitude" id="longitude" />
-            <input type="hidden" asp-for="Input.Location.Latitude" id="latitude" />
+            <input type="hidden" asp-for="Input.Location.Longitude" data-bind="value: longitude" />
+            <input type="hidden" asp-for="Input.Location.Latitude" data-bind="value: latitude" />
         </form>
     </div>
     <div class="col-lg-6 col-7">
@@ -45,5 +45,6 @@
 </div>
 
 @section Scripts {
+    <script src="~/lib/knockout/build/output/knockout-latest.min.js"></script>
     <script src="~/js/addComment.min.js" asp-append-version="true"></script>
 }
