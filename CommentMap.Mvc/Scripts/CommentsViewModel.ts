@@ -62,4 +62,14 @@ export default class CommentsViewModel {
   private get first(): Coordinate {
     return this._coordinates.length > 0 ? this._coordinates[0] : [0, 0];
   }
+
+  private setView(coordinate: Coordinate) {
+    const view = this._map.getView();
+    view.setCenter(coordinate);
+    view.setZoom(15);
+  }
+
+  public goToLocation(coordinate: Coordinate, viewModel: CommentsViewModel) {
+    viewModel.setView(coordinate);
+  }
 }
