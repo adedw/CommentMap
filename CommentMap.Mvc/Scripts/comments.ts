@@ -1,32 +1,11 @@
-import Map from "ol/Map";
-import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
-import { XYZ, Vector as VectorSource } from "ol/source";
-import { FullScreen, defaults as defaultControls } from "ol/control";
-import { MapViewModel } from "./MapViewModel";
-import type { Location } from "./types";
+import CommentsViewModel from "./CommentsViewModel";
 
-const locations: Location[] = $("[data-location]").map(function () {
-  return $(this).data("location");
-}).get();
+$(() => {
+  const elements = document.querySelectorAll("[data-location]");
+  const coordinates: [number, number][] = Array.from(elements)
+    .map((element) => JSON.parse(element.getAttribute("data-location")));
 
-const mapViewModel = MapViewModel.fromLocations(locations);
+  const root = document.getElementById("root");
 
-const defaultView = mapViewModel.getViewAtFirst();
-
-const features = mapViewModel.getPointFeatures();
-
-const map = new Map({
-  target: "map",
-  layers: [
-    new TileLayer({
-      source: new XYZ({
-        url: "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}"
-      }),
-    }),
-    new VectorLayer({
-      source: new VectorSource({ features })
-    })
-  ],
-  view: defaultView,
-  controls: defaultControls().extend([new FullScreen()]),
+  ko.applyBindings(new CommentsViewModel(coordinates), root);
 });

@@ -50,6 +50,9 @@ try
     builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
 
     builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
+    builder.Services.AddSingleton<IIdGenerationService, UuidV7GenerationService>();
+    builder.Services.AddSingleton<ICommentFactory, CommentFactory>();
+    builder.Services.AddScoped<IAddCommentService, AddCommentService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 

@@ -6,7 +6,7 @@ public class Comment : IEquatable<Comment>
 {
     public required Guid Id { get; init; }
 
-    public required User User { get; init; }
+    public User? User { get; init; }
     public Guid UserId { get; init; }
 
     public required Point Location { get; set; }

@@ -1,0 +1,50 @@
+﻿@page
+@using CommentMap.Mvc.Pages.Comments
+@model AddModel
+@{
+    ViewData["Title"] = "Add new comment";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/ol.min.css" asp-append-version="true" />
+}
+
+<h1>Add new comment</h1>
+
+<div class="row row-cols-2" id="root">
+    <div class="col-lg-6 col-5">
+        <form method="post">
+            <div class="mb-2">
+                <div class="form-floating">
+                    <input asp-for="Input.Title" class="form-control" aria-describedby="title-help" placeholder="Title" />
+                    <label asp-for="Input.Title">Title</label>
+                </div>
+                <div id="title-help" class="form-text">Your title must be 1-100 characters long.</div>
+                <span asp-validation-for="Input.Title" class="text-danger" role="alert"></span>
+            </div>
+
+            <div class="mb-2">
+                <div class="form-floating">
+                    <textarea asp-for="Input.Text" class="form-control" aria-describedby="text-help" placeholder="Text"></textarea>
+                    <label asp-for="Input.Text">Text</label>
+                </div>
+                <div id="text-help" class="form-text">Your text must be 1-250 characters long.</div>
+                <span asp-validation-for="Input.Text" class="text-danger" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+
+            <input type="hidden" asp-for="Input.Location.Longitude" data-bind="value: longitude" />
+            <input type="hidden" asp-for="Input.Location.Latitude" data-bind="value: latitude" />
+        </form>
+    </div>
+    <div class="col-lg-6 col-7">
+        <span asp-validation-for="Input.Location" class="text-danger" role="alert"></span>
+        <div id="map" class="sticky-top mw-100 vh-100"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/knockout/build/output/knockout-latest.min.js"></script>
+    <script src="~/js/addComment.min.js" asp-append-version="true"></script>
+}
