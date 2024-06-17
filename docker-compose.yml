@@ -22,7 +22,6 @@ services:
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=comment-map;Username=comment-map;Password=P@ssw0rd"
       AllowedHosts: "*"
       ASPNETCORE_HTTP_PORTS: 8080
-      ASPNETCORE_HTTPS_PORTS: 8081
       ASPNETCORE_ENVIRONMENT: Release
       Serilog__MinimumLevel__Default: Information
       Serilog__MinimumLevel__Override__Microsoft.AspNetCore: Warning
@@ -31,7 +30,6 @@ services:
     container_name: commentmap-mvc
     ports:
       - "127.0.0.1:8080:8080"
-      - "127.0.0.1:8081:8081"
 
 volumes:
   pg-data:
