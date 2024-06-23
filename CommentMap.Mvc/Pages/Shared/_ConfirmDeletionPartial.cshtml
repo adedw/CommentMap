@@ -1,4 +1,4 @@
-﻿<div class="modal fade" id="confirm-deletion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirm-deletion-title" aria-hidden="true" role="dialog">
+﻿<div class="modal fade" tabindex="-1" aria-labelledby="confirm-deletion-title" role="dialog" aria-hidden="true" data-bind="modal: { show: popup.show }">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,7 +12,9 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <form asp-page-handler="DeleteComment" asp-route-id="@Guid.NewGuid()">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </div>
         </div>
     </div>
