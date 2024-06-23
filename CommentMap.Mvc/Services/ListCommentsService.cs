@@ -10,6 +10,7 @@ public class ListCommentsService(ICommentMapDbContext dbContext) : IListComments
     {
         var comments = await dbContext.Comments
             .Where(c => c.UserId == userId)
+            .Where(c => !c.IsDeleted)
             .OrderBy(c => c.Id)
             .Select(c => new CommentCardViewModel(c.Id, new LocationViewModel { Longitude = c.Location.X, Latitude = c.Location.Y }, c.Title, c.Text, c.CreatedAt))
             .ToListAsync(cancellationToken);
