@@ -14,8 +14,7 @@ services:
   commentmap-mvc:
     image: ghcr.io/adedw/commentmap-mvc:master
     build:
-      context: .
-      dockerfile: CommentMap.Mvc/Dockerfile
+      context: ./CommentMap.Mvc
     depends_on:
       - postgres
     environment:

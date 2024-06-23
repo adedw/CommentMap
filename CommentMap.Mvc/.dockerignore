@@ -1,0 +1,10 @@
+**/.dockerignore
+**/Dockerfile*
+**/node_modules
+**/*.*proj.user
+**/bin
+**/obj
+**/wwwroot
+**/Properties/
+**/appsettings.Development.json
+**/eslint.config.js
