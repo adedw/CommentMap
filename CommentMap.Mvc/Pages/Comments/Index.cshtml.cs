@@ -17,4 +17,9 @@ public class IndexModel(IListCommentsService listCommentsService) : PageModel
         Comments = await listCommentsService.GetAllUserComments(userId, cancellationToken);
         return Page();
     }
+
+    public async Task<PageResult> OnPostDeleteCommentAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return Page();
+    }
 }
