@@ -53,6 +53,7 @@ try
     builder.Services.AddSingleton<IIdGenerationService, UuidV7GenerationService>();
     builder.Services.AddSingleton<ICommentFactory, CommentFactory>();
     builder.Services.AddScoped<IAddCommentService, AddCommentService>();
+    builder.Services.AddScoped<IDeleteCommentService, DeleteCommentService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 
