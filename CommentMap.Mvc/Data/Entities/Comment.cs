@@ -15,6 +15,8 @@ public class Comment : IEquatable<Comment>
     public required string Text { get; set; }
     public required DateTime CreatedAt { get; init; }
 
+    public bool IsDeleted { get; set; }
+
     public bool Equals(Comment? other)
     {
         if (other is null) return false;

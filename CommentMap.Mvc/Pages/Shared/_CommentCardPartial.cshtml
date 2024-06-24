@@ -1,7 +1,6 @@
 ﻿@using CommentMap.Mvc.ViewModels
 @using Humanizer
 @model CommentCardViewModel
-
 @{
     var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
 }
@@ -11,7 +10,7 @@
     <div class="card-body">
         <p class="card-text">@Model.Text</p>
         <div class="btn-group" role="group" aria-label="Card actions">
-            <button type="button" class="btn btn-light" title="Find on map" data-bind="click: goToLocation.bind($data, @Model.Location)">
+            <button type="button" class="btn btn-light" title="Find on map" data-bind="click: function() { goToLocation (@Model.Location) }">
                 <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
                 <span class="visually-hidden">Find on map</span>
             </button>
@@ -19,10 +18,10 @@
                 <i class="bi bi-pencil-fill" aria-hidden="true"></i>
                 <span class="visually-hidden">Edit</span>
             </a>
-            <a asp-page="/Comments/Delete" asp-route-id="@Model.Id" class="btn btn-danger" title="Delete" role="button">
+            <button type="button" class="btn btn-light" title="Delete" data-bind="click: function() { confirmDelete('@Model.Id', '@Model.Title') }">
                 <i class="bi bi-trash-fill" aria-hidden="true"></i>
                 <span class="visually-hidden">Delete</span>
-            </a>
+            </button>
         </div>
     </div>
     <div class="card-footer text-muted">@DateTime.UtcNow.Subtract(elapsedInterval).Humanize()</div>

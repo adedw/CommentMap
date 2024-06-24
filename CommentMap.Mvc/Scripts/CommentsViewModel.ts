@@ -7,6 +7,7 @@ import View from "ol/View";
 import Feature from "ol/Feature";
 import { Point } from "ol/geom";
 import { Icon, Style } from "ol/style";
+import ConfirmDeletePopupViewModel from "./ConfirmDeletePopupViewModel";
 
 
 export default class CommentsViewModel {
@@ -20,6 +21,7 @@ export default class CommentsViewModel {
   });
   
   private _map: Map;
+  public confirmDeletePopup: ConfirmDeletePopupViewModel;
 
   constructor(private _coordinates: Coordinate[]) {
     this._map = new Map({
@@ -39,6 +41,7 @@ export default class CommentsViewModel {
       view: this.getViewAtFirst(),
       controls: defaultControls().extend([new FullScreen()]),
     });
+    this.confirmDeletePopup = new ConfirmDeletePopupViewModel();
   }
   
   private getViewAtFirst(): View {
@@ -69,7 +72,11 @@ export default class CommentsViewModel {
     view.setZoom(15);
   }
 
-  public goToLocation(coordinate: Coordinate, viewModel: CommentsViewModel) {
-    viewModel.setView(coordinate);
+  public goToLocation(coordinate: Coordinate) {
+    this.setView(coordinate);
+  }
+
+  public confirmDelete(id: string, title: string) {
+    this.confirmDeletePopup.open(id, title);
   }
 }
