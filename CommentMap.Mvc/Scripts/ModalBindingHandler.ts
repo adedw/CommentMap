@@ -1,7 +1,7 @@
 ﻿import ConfirmDeletePopupViewModel from "./ConfirmDeletePopupViewModel";
 
 export default function setupModalBindingHandler() {
-  ko.bindingHandlers.modal = { init, update };
+    ko.bindingHandlers.modal = { init, update };
 }
 
 function init(element: HTMLElement, valueAccessor: KnockoutObservable<ConfirmDeletePopupViewModel>) {
@@ -25,7 +25,7 @@ function update(element: HTMLElement, valueAccessor: KnockoutObservable<ConfirmD
       url.searchParams.delete("id");
     }
     confirmDeletionForm.action = url.toString();
-  }
+}
 
   $(element).modal(show ? "show" : "hide");
 }
