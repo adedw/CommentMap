@@ -2,6 +2,7 @@
 using CommentMap.Mvc.Services;
 using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CommentMap.Mvc.Pages.Comments;
@@ -18,8 +19,8 @@ public class IndexModel(IListCommentsService listCommentsService) : PageModel
         return Page();
     }
 
-    public async Task<PageResult> OnPostDeleteCommentAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<RedirectToPageResult> OnPostDeleteCommentAsync(Guid id, CancellationToken cancellationToken)
     {
-        return Page();
+        return RedirectToPage("/Comments/Index");
     }
 }

@@ -1,4 +1,4 @@
-﻿<div class="modal fade" tabindex="-1" aria-labelledby="confirm-deletion-title" role="dialog" aria-hidden="true" data-bind="modal: popup">
+﻿<div class="modal fade" tabindex="-1" aria-labelledby="confirm-deletion-title" role="dialog" aria-hidden="true" data-bind="modal: confirmDeletePopup">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,12 +7,12 @@
             </div>
 
             <div class="modal-body">
-                <!-- Modal body content -->
+                <p>Are you sure you want to delete &quot;<span data-bind="text: confirmDeletePopup.title"></span>&quot; comment?</p>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form asp-page-handler="DeleteComment" asp-route-id="@Guid.NewGuid()">
+                <form asp-page-handler="DeleteComment" id="confirm-deletion-form">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>

@@ -19,7 +19,7 @@
                 <i class="bi bi-pencil-fill" aria-hidden="true"></i>
                 <span class="visually-hidden">Edit</span>
             </a>
-            <button type="button" class="btn btn-light" title="Delete" data-bind="click: function() { popup.show(true) }">
+            <button type="button" class="btn btn-light" title="Delete" data-bind="click: function() { confirmDelete('@Model.Id', '@Model.Title') }">
                 <i class="bi bi-trash-fill" aria-hidden="true"></i>
                 <span class="visually-hidden">Delete</span>
             </button>
