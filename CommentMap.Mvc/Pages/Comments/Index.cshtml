@@ -4,6 +4,8 @@
 @{
 
     ViewData["Title"] = "My comments";
+    var selectedOrder = (int)Model.SelectedOrder;
+    ViewData["SelectedOrder"] = selectedOrder;
 }
 
 @section Styles {
@@ -39,7 +41,6 @@
         <div class="col-lg-6 col-7">
             <div id="map" class="sticky-top mw-100 vh-100"></div>
         </div>
-        <partial name="_ConfirmDeletionPartial" />
     </div>
 }
 else

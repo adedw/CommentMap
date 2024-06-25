@@ -12,6 +12,9 @@ public class IndexModel(IListCommentsService listCommentsService, IDeleteComment
 {
     public List<CommentCardViewModel>? Comments { get; private set; }
 
+    [BindProperty(SupportsGet = true)]
+    public Order SelectedOrder { get; set; }
+
     public async Task<PageResult> OnGetAsync(CancellationToken cancellationToken)
     {
         var userId = User.FindUserId();
