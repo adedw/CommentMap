@@ -1,8 +1,7 @@
 ﻿@page
-@using CommentMap.Mvc.ViewModels
+@using CommentMap.Mvc.Models
 @model IndexModel
 @{
-
     ViewData["Title"] = "My comments";
     var selectedOrder = (int)Model.SelectedOrder;
     ViewData["SelectedOrder"] = selectedOrder;
@@ -14,16 +13,22 @@
 
 <h1>My comments</h1>
 
-<nav class="navbar navbar-expand" aria-label="Comments actions">
-    <ul class="navbar-nav gap-2">
-        <li class="nav-item">
-            <a class="btn btn-outline-primary" role="button" asp-page="/Comments/Add">
-                <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
-                <span>Add</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+<div class="btn-toolbar mb-3" role="toolbar" aria-label="Comments actions">
+    <a class="btn btn-outline-primary me-2 d-flex align-items-center" role="button" asp-page="/Comments/Add" asp-route-SelectedOrder="@selectedOrder">
+        <i class="bi bi-plus-circle me-1" aria-hidden="true"></i>
+        <span>Add</span>
+    </a>
+    <form method="get" class="input-group">
+        <div class="form-floating">
+            <select class="form-select" aria-label="Sort order" asp-items="Html.GetEnumSelectList<Order>()" asp-for="SelectedOrder"></select>
+            <label asp-for="SelectedOrder">Sort order</label>
+        </div>
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-right me-1" aria-hidden="true"></i>
+            <span class="visually-hidden">Apply sort order</span>
+        </button>
+    </form>
+</div>
 
 @if (Model.Comments is not null && Model.Comments.Count > 0)
 {
@@ -33,7 +38,7 @@
                 @foreach (var comment in Model.Comments)
                 {
                     <div class="col mb-3">
-                        <partial name="_CommentCardPartial" model="comment" />
+                        <partial name="_CommentCardPartial" model="comment" view-data="ViewData" />
                     </div>
                 }
             </div>
