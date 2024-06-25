@@ -54,6 +54,7 @@ try
     builder.Services.AddSingleton<ICommentFactory, CommentFactory>();
     builder.Services.AddScoped<IAddCommentService, AddCommentService>();
     builder.Services.AddScoped<IDeleteCommentService, DeleteCommentService>();
+    builder.Services.AddScoped<IConfirmDeleteService, ConfirmDeleteService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 

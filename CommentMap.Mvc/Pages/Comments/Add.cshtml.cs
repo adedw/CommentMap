@@ -13,6 +13,9 @@ public class AddModel(IAddCommentService addCommentService) : PageModel
     [BindProperty]
     public required AddNewCommentInput Input { get; init; }
 
+    [BindProperty(SupportsGet = true)]
+    public int SelectedOrder { get; set; }
+
     public async Task<ActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
@@ -25,7 +28,7 @@ public class AddModel(IAddCommentService addCommentService) : PageModel
 
         await addCommentService.AddAsync(addCommentDto, cancellationToken);
 
-        return RedirectToPage("/Comments/Index");
+        return RedirectToPage("/Comments/Index", new { SelectedOrder });
     }
 
     public void OnGet()

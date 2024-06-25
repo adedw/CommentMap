@@ -1,0 +1,15 @@
+﻿@page
+@model ConfirmDeleteModel
+@{
+    ViewData["Title"] = "Confirm deletion";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">Confirm deletion</h1>
+        <p class="card-text text-muted">Are you sure you want to delete &quot;@Model.Title&quot; comment?</p>
+        <form method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>

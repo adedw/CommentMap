@@ -1,8 +1,9 @@
-﻿using CommentMap.Mvc.ViewModels;
+﻿using CommentMap.Mvc.Models;
+using CommentMap.Mvc.ViewModels;
 
 namespace CommentMap.Mvc.Services;
 
 public interface IListCommentsService
 {
-    Task<List<CommentCardViewModel>> GetAllUserComments(Guid userId, CancellationToken cancellationToken = default);
+    Task<List<CommentCardViewModel>> GetAllUserComments(GetAllCommentsDto dto, CancellationToken cancellationToken = default);
 }
