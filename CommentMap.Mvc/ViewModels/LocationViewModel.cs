@@ -1,17 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace CommentMap.Mvc.ViewModels;
 
 public class LocationViewModel
 {
-    [ValidateNever]
-    public double? Longitude { get; set; }
+    [Required]
+    [Range(-20037508.3427892, 20037508.3427892)]
+    public double? Longitude { get; init; }
 
-    [ValidateNever]
-    public double? Latitude { get; set; }
+    [Required]
+    [Range(-20037508.3427892, 20037508.3427892)]
+    public double? Latitude { get; init; }
 
-    public override string ToString()
+    public string GetJsonArray()
     {
-        return $"[{Longitude}, {Latitude}]";
+        if (!Longitude.HasValue)
+        {
+            throw new NullReferenceException("Longitude has no value.");
+        }
+        if (!Latitude.HasValue)
+        {
+            throw new NullReferenceException("Latitude has no value.");
+        }
+
+        return $"[{Longitude.Value.ToString(CultureInfo.InvariantCulture)}, {Latitude.Value.ToString(CultureInfo.InvariantCulture)}]";
     }
 }

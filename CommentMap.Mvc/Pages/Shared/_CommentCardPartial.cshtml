@@ -3,14 +3,15 @@
 @model CommentCardViewModel
 @{
     var elapsedInterval = DateTime.UtcNow - Model.CreatedAt;
+    var coordinates = Model.Location.GetJsonArray();
 }
 
-<div class="card px-0" data-location="@Model.Location">
+<div class="card px-0" data-location="@coordinates">
     <h5 class="card-header">@Model.Title</h5>
     <div class="card-body">
         <p class="card-text">@Model.Text</p>
         <div class="btn-group" role="group" aria-label="Card actions">
-            <button type="button" class="btn btn-light" title="Find on map" data-bind="click: function() { goToLocation (@Model.Location) }">
+            <button type="button" class="btn btn-light" title="Find on map" data-bind="click: function() { goToLocation (@coordinates) }">
                 <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
                 <span class="visually-hidden">Find on map</span>
             </button>
