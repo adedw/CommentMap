@@ -13,15 +13,17 @@ export default class AddCommentViewModel {
   public longitude: KnockoutObservable<number>;
   public latitude: KnockoutObservable<number>;
 
+  private _intl: Intl.NumberFormat;
   private _vectorSource: VectorSource<Feature<Point>>;
   private _map: Map;
 
-  constructor(longitude: number, latitude: number) {
+  constructor(longitude: number, latitude: number, locale: string) {
     this.setPoint = this.setPoint.bind(this);
 
     this.longitude = ko.observable<number>(longitude);
     this.latitude = ko.observable<number>(latitude);
 
+    this._intl = new Intl.NumberFormat(locale, { maximumFractionDigits: 10 });
     this._vectorSource = new VectorSource<Feature<Point>>();
 
     this._map = new Map({
@@ -82,12 +84,16 @@ export default class AddCommentViewModel {
     const longitude = this.longitude();
     const latitude = this.latitude();
 
-    if (longitude === 0 || latitude === 0) {
-      return;
-    }
-
     const point = new Point([longitude, latitude]);
     const feature = new Feature(point);
     this._vectorSource.addFeature(feature);
+  }
+
+  public get localLongitude() {
+    return this._intl.format(this.longitude()).replace(/\s/g, "");;
+  }
+
+  public get localLatitude() {
+    return this._intl.format(this.latitude()).replace(/\s/g, "");
   }
 }
