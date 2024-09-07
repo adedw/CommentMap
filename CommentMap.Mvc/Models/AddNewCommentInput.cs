@@ -1,5 +1,4 @@
-﻿using CommentMap.Mvc.DataAnnotations;
-using CommentMap.Mvc.ViewModels;
+﻿using CommentMap.Mvc.ViewModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace CommentMap.Mvc.Models;
@@ -14,6 +13,5 @@ public class AddNewCommentInput
     [StringLength(250)]
     public string? Text { get; init; }
     
-    [LocationRequired]
     public required LocationViewModel Location { get; init; }
 }

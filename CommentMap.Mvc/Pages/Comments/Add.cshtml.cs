@@ -4,6 +4,7 @@ using CommentMap.Mvc.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Globalization;
 
 namespace CommentMap.Mvc.Pages.Comments;
 
@@ -15,6 +16,8 @@ public class AddModel(IAddCommentService addCommentService) : PageModel
 
     [BindProperty(SupportsGet = true)]
     public int SelectedOrder { get; set; }
+
+    public string? CurrentLocale { get; private set; }
 
     public async Task<ActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
@@ -33,5 +36,6 @@ public class AddModel(IAddCommentService addCommentService) : PageModel
 
     public void OnGet()
     {
+        CurrentLocale = CultureInfo.CurrentCulture.Name;
     }
 }

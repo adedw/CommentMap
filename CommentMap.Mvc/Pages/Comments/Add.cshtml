@@ -13,7 +13,7 @@
 
 <div class="row row-cols-2" id="root">
     <div class="col-lg-6 col-5">
-        <form method="post">
+        <form method="post" data-locale="@Model.CurrentLocale">
             <div class="mb-2">
                 <div class="form-floating">
                     <input asp-for="Input.Title" class="form-control" aria-describedby="title-help" placeholder="Title" />
@@ -32,14 +32,20 @@
                 <span asp-validation-for="Input.Text" class="text-danger" role="alert"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create</button>
+            <div class="mb-2">
+                <input type="hidden" asp-for="Input.Location.Longitude" data-bind="value: localLongitude" />
+                <span asp-validation-for="Input.Location.Longitude" class="text-danger" role="alert"></span>
+            </div>
 
-            <input type="hidden" asp-for="Input.Location.Longitude" data-bind="value: longitude" />
-            <input type="hidden" asp-for="Input.Location.Latitude" data-bind="value: latitude" />
+            <div class="mb-2">
+                <input type="hidden" asp-for="Input.Location.Latitude" data-bind="value: localLatitude" />
+                <span asp-validation-for="Input.Location.Latitude" class="text-danger" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>
     <div class="col-lg-6 col-7">
-        <span asp-validation-for="Input.Location" class="text-danger" role="alert"></span>
         <div id="map" class="sticky-top mw-100 vh-100"></div>
     </div>
 </div>
