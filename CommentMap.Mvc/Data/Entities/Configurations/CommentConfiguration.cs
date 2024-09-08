@@ -14,7 +14,7 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(c => c.Location).HasColumnType("geometry (point)");
+        builder.Property(c => c.Location).HasColumnType("geometry (point, 3857)");
         builder.HasIndex(c => c.Location).HasMethod("gist");
 
         builder.Property(c => c.Title).HasMaxLength(100);
