@@ -51,10 +51,12 @@ try
 
     builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
     builder.Services.AddSingleton<IIdGenerationService, UuidV7GenerationService>();
-    builder.Services.AddSingleton<ICommentFactory, CommentFactory>();
+    builder.Services.AddScoped<ICommentFactory, CommentFactory>();
     builder.Services.AddScoped<IAddCommentService, AddCommentService>();
     builder.Services.AddScoped<IDeleteCommentService, DeleteCommentService>();
     builder.Services.AddScoped<IConfirmDeleteService, ConfirmDeleteService>();
+    builder.Services.AddScoped<IGetCountryViewModelService, GetCountryViewModelService>();
+    builder.Services.AddScoped<IGuessCountryService, GuessCountryService>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 

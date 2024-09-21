@@ -3,6 +3,7 @@ using System;
 using CommentMap.Mvc.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CommentMap.Mvc.Data.Migrations
 {
     [DbContext(typeof(CommentMapDbContext))]
-    partial class CommentMapDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240909164708_AddCountry")]
+    partial class AddCountry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +37,6 @@ namespace CommentMap.Mvc.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("ISO3CodeCountry")
-                        .HasColumnType("char(3)");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -61,8 +61,6 @@ namespace CommentMap.Mvc.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ISO3CodeCountry");
 
                     b.HasIndex("Location");
 
@@ -321,18 +319,11 @@ namespace CommentMap.Mvc.Data.Migrations
 
             modelBuilder.Entity("CommentMap.Mvc.Data.Entities.Comment", b =>
                 {
-                    b.HasOne("CommentMap.Mvc.Data.Entities.Country", "Country")
-                        .WithMany("Comments")
-                        .HasForeignKey("ISO3CodeCountry")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("CommentMap.Mvc.Data.Entities.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Country");
 
                     b.Navigation("User");
                 });
@@ -386,11 +377,6 @@ namespace CommentMap.Mvc.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CommentMap.Mvc.Data.Entities.Country", b =>
-                {
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("CommentMap.Mvc.Data.Entities.User", b =>

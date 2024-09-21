@@ -1,0 +1,45 @@
+﻿@page
+@using CommentMap.Mvc.Pages.Countries
+@model IndexModel
+@{
+    ViewData["Title"] = "Country";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/validation-summary-errors.min.css" asp-append-version="true" />
+}
+
+@if (ModelState.ErrorCount > 0)
+{
+    <div asp-validation-summary="All"></div>
+    return;
+}
+
+@if (Model.Country is null)
+{
+    <h1>Oops... There is no country with code &quot;@Model.ISO3Code&quot;</h1>
+    return;
+}
+
+<table class="table table-striped table-hover">
+    <tr>
+        <th scope="row">ISO 3166-1 alpha-3</th>
+        <td>@Model.Country.ISO3Code</td>
+    </tr>
+    <tr>
+        <th scope="row">ISO 3166-1 alpha-2</th>
+        <td>@Model.Country.ISO2Code</td>
+    </tr>
+    <tr>
+        <th scope="row">Name</th>
+        <td>@Model.Country.Name</td>
+    </tr>
+    <tr>
+        <th scope="row">Region name</th>
+        <td>@Model.Country.RegionName</td>
+    </tr>
+    <tr>
+        <th scope="row">Subregion name</th>
+        <td>@Model.Country.SubregionName</td>
+    </tr>
+</table>

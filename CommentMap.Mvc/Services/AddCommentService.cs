@@ -6,12 +6,12 @@ namespace CommentMap.Mvc.Services;
 public class AddCommentService(ICommentMapDbContext dbContext, ICommentFactory commentFactory)
     : IAddCommentService
 {
-    public Task AddAsync(AddNewCommentDto addNewCommentDto, CancellationToken cancellationToken)
+    public async Task AddAsync(AddNewCommentDto addNewCommentDto, CancellationToken cancellationToken)
     {
-        var comment = commentFactory.CreateFrom(addNewCommentDto);
+        var comment = await commentFactory.CreateAsync(addNewCommentDto, cancellationToken);
 
         dbContext.Comments.Add(comment);
 
-        return dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

@@ -17,6 +17,9 @@ public class Comment : IEquatable<Comment>
 
     public bool IsDeleted { get; set; }
 
+    public Country? Country { get; set; }
+    public string? ISO3CodeCountry { get; set; }
+
     public bool Equals(Comment? other)
     {
         if (other is null) return false;

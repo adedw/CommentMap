@@ -14,7 +14,7 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(c => c.Location).HasColumnType("geometry (point)");
+        builder.Property(c => c.Location).HasColumnType("geometry (point, 3857)");
         builder.HasIndex(c => c.Location).HasMethod("gist");
 
         builder.Property(c => c.Title).HasMaxLength(100);
@@ -23,5 +23,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.Property(c => c.IsDeleted).HasDefaultValue(false);
 
         builder.HasIndex(c => c.Title);
+
+        builder.HasOne(c => c.Country)
+            .WithMany(c => c.Comments)
+            .HasForeignKey(c => c.ISO3CodeCountry)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
