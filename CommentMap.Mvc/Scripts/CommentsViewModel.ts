@@ -10,6 +10,8 @@ import { Icon, Style } from "ol/style";
 
 
 export default class CommentsViewModel {
+  private static readonly DEFAULT_ZOOM = 10;
+
   private static readonly MARKER_ICON_STYLE = new Style({
     image: new Icon({
       anchor: [0.5, 22],
@@ -18,10 +20,10 @@ export default class CommentsViewModel {
       src: "/assets/marker.svg",
     }),
   });
-  
-  private _map: Map;
 
-  constructor(private _coordinates: Coordinate[]) {
+  private readonly _map: Map;
+
+  constructor(private readonly _coordinates: Coordinate[]) {
     this._map = new Map({
       target: "map",
       layers: [
@@ -40,11 +42,11 @@ export default class CommentsViewModel {
       controls: defaultControls().extend([new FullScreen()]),
     });
   }
-  
+
   private getViewAtFirst(): View {
     return new View({
       center: this.first,
-      zoom: 15,
+      zoom: CommentsViewModel.DEFAULT_ZOOM,
       projection: "EPSG:3857",
     });
   }
@@ -63,13 +65,8 @@ export default class CommentsViewModel {
     return this._coordinates.length > 0 ? this._coordinates[0] : [0, 0];
   }
 
-  private setView(coordinate: Coordinate) {
+  public goToLocation(coordinate: Coordinate) {
     const view = this._map.getView();
     view.setCenter(coordinate);
-    view.setZoom(15);
-  }
-
-  public goToLocation(coordinate: Coordinate) {
-    this.setView(coordinate);
   }
 }
