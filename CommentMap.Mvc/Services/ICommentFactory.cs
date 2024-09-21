@@ -5,5 +5,5 @@ namespace CommentMap.Mvc.Services;
 
 public interface ICommentFactory
 {
-    Comment CreateFrom(AddNewCommentDto addNewCommentDto);
+    Task<Comment> CreateAsync(AddNewCommentDto addNewCommentDto, CancellationToken cancellationToken = default);
 }
