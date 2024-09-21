@@ -23,5 +23,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.Property(c => c.IsDeleted).HasDefaultValue(false);
 
         builder.HasIndex(c => c.Title);
+
+        builder.HasOne(c => c.Country)
+            .WithMany(c => c.Comments)
+            .HasForeignKey(c => c.ISO3CodeCountry)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

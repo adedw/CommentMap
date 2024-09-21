@@ -12,4 +12,6 @@ public class Country
     public required string RegionName { get; set; }
     public short SubregionCode { get; set; }
     public required string SubregionName { get; set; }
+
+    public HashSet<Comment>? Comments { get; set; }
 }
