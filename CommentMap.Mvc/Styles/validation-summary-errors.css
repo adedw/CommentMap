@@ -1,0 +1,18 @@
+﻿.validation-summary-errors {
+  background-color: var(--bs-danger-bg-subtle);
+  border-radius: var(--bs-border-radius);
+  border: var(--bs-border-width) var(--bs-border-style) var(--bs-danger-border-subtle);
+}
+
+.validation-summary-errors > ul {
+  list-style-type: none;
+  padding: 16px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.validation-summary-errors > ul > li {
+  color: var(--bs-danger-text-emphasis);
+}
