@@ -13,9 +13,9 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="name" />
-                <label asp-for="Input.UserName">UserName</label>
-                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
@@ -27,7 +27,14 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div>
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            </div>
+            <div>
+                <p>
+                    <a asp-page="./Login">Already have an account?</a>
+                </p>
+            </div>
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
@@ -36,9 +43,9 @@
             <hr />
             <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                 @foreach (var provider in Model.ExternalLogins!)
-                {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                }
+            {
+                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+            }
             </form>
         </section>
     </div>

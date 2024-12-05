@@ -16,6 +16,7 @@ public class SmtpEmailSender : IEmailSender
         mail.Subject = "Confirmation link";
         mail.BodyEncoding = Encoding.UTF8;
         mail.Body = htmlMessage;
+        mail.IsBodyHtml = true;
 
         using var smtpClient = new SmtpClient("127.0.0.1", 1025);
 
