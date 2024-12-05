@@ -6,7 +6,7 @@ namespace CommentMap.Mvc.Services;
 public class EnableAuthenticatorService(UrlEncoder urlEncoder, QRCodeGenerator qRCodeGenerator)
     : IEnableAuthenticatorService
 {
-    public string GetQrCodeUri(string appName, string userName, string key)
+    public string GetQRCodeUri(string appName, string userName, string key)
     {
         var encodedAppName = urlEncoder.Encode(appName);
         var encodedUserName = urlEncoder.Encode(userName);

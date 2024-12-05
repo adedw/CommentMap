@@ -4,6 +4,7 @@ using CommentMap.Mvc.Extensions.DependencyInjection;
 using CommentMap.Mvc.Models;
 using CommentMap.Mvc.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using QRCoder;
 using Serilog;
 
@@ -25,8 +26,7 @@ try
         .AddIdentity<User, Role>(options =>
         {
             options.Stores.MaxLengthForKeys = 128;
-            options.SignIn.RequireConfirmedAccount = false;
-            options.Lockout.AllowedForNewUsers = false;
+            options.SignIn.RequireConfirmedAccount = true;
         })
         .AddDefaultTokenProviders()
         .AddEntityFrameworkStores<CommentMapDbContext>();
@@ -56,6 +56,7 @@ try
     builder.Services.AddScoped<IConfirmDeleteService, ConfirmDeleteService>();
     builder.Services.AddScoped<IGetCountryViewModelService, GetCountryViewModelService>();
     builder.Services.AddScoped<IGuessCountryService, GuessCountryService>();
+    builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 
@@ -84,7 +85,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
+    Log.Fatal(ex, "Application terminated unexpectedly.");
 }
 finally
 {
