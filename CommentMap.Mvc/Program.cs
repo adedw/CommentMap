@@ -50,7 +50,6 @@ try
     builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
 
     builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
-    builder.Services.AddSingleton<IIdGenerationService, UuidV7GenerationService>();
     builder.Services.AddScoped<ICommentFactory, CommentFactory>();
     builder.Services.AddScoped<IAddCommentService, AddCommentService>();
     builder.Services.AddScoped<IDeleteCommentService, DeleteCommentService>();
