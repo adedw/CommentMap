@@ -1,22 +1,12 @@
 {
   "profiles": {
-    "Docker Compose": {
-      "commandName": "DockerCompose",
-      "commandVersion": "1.0",
-      "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "commentmap-mvc",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
-      "serviceActions": {
-        "commentmap-mvc": "StartDebugging",
-        "postgres": "StartWithoutDebugging"
-      }
-    },
-    "DbOnly": {
+    "My dependencies": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
         "commentmap-mvc": "DoNotStart",
-        "postgres": "StartWithoutDebugging"
+        "postgres": "StartWithoutDebugging",
+        "mailhog": "StartWithoutDebugging"
       }
     }
   }
