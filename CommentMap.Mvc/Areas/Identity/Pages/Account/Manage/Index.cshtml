@@ -1,25 +1,31 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Edit your profile";
+    ViewData["Title"] = "Manage Email";
 }
 
 <h3>@ViewData["Title"]</h3>
+
 <partial name="_StatusMessage" for="StatusMessage" />
+
 <div class="row">
     <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" disabled />
-                <label asp-for="Username" class="form-label"></label>
+
+            <div class="form-floating input-group mb-3">
+                <input asp-for="Email" class="form-control" disabled />
+                <label asp-for="Email" class="form-label"></label>
+                <i class="input-group-text bi bi-check-lg text-success"></i>
             </div>
+
             <div class="form-floating mb-3">
-                <input asp-for="Input.NewUserName" class="form-control" placeholder="Please enter your new username." />
-                <label asp-for="Input.NewUserName" class="form-label"></label>
-                <span asp-validation-for="Input.NewUserName" class="text-danger"></span>
+                <input asp-for="Input.NewEmail" class="form-control" placeholder="Please enter your new username." aria-required="true" />
+                <label asp-for="Input.NewEmail" class="form-label"></label>
+                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Change email</button>
         </form>
     </div>
 </div>
