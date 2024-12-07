@@ -40,15 +40,11 @@ try
         .AddAuthentication()
         .AddGoogle(googleOptions =>
         {
-            var googleAuthenticationOptions = builder.Configuration
-                .GetSection("Authentication:Google")
-                .Get<GoogleAuthenticationOptions>();
-            googleOptions.ClientId = googleAuthenticationOptions.ClientId;
-            googleOptions.ClientSecret = googleAuthenticationOptions.ClientSecret;
+            googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
         });
     builder.Services.AddSingleton<QRCodeGenerator>();
     builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
-
     builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
     builder.Services.AddScoped<ICommentFactory, CommentFactory>();
     builder.Services.AddScoped<IAddCommentService, AddCommentService>();
@@ -56,6 +52,10 @@ try
     builder.Services.AddScoped<IConfirmDeleteService, ConfirmDeleteService>();
     builder.Services.AddScoped<IGetCountryViewModelService, GetCountryViewModelService>();
     builder.Services.AddScoped<IGuessCountryService, GuessCountryService>();
+    builder.Services.AddOptions<SmtpEmailSenderOptions>()
+        .Bind(builder.Configuration.GetSection(nameof(SmtpEmailSenderOptions.SmtpEmailSender)))
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
     builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
