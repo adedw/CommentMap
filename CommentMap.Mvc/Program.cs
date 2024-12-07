@@ -4,6 +4,7 @@ using CommentMap.Mvc.Extensions.DependencyInjection;
 using CommentMap.Mvc.Models;
 using CommentMap.Mvc.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using QRCoder;
 using Serilog;
 
@@ -25,8 +26,7 @@ try
         .AddIdentity<User, Role>(options =>
         {
             options.Stores.MaxLengthForKeys = 128;
-            options.SignIn.RequireConfirmedAccount = false;
-            options.Lockout.AllowedForNewUsers = false;
+            options.SignIn.RequireConfirmedAccount = true;
         })
         .AddDefaultTokenProviders()
         .AddEntityFrameworkStores<CommentMapDbContext>();
@@ -40,15 +40,11 @@ try
         .AddAuthentication()
         .AddGoogle(googleOptions =>
         {
-            var googleAuthenticationOptions = builder.Configuration
-                .GetSection("Authentication:Google")
-                .Get<GoogleAuthenticationOptions>();
-            googleOptions.ClientId = googleAuthenticationOptions.ClientId;
-            googleOptions.ClientSecret = googleAuthenticationOptions.ClientSecret;
+            googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+            googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
         });
     builder.Services.AddSingleton<QRCodeGenerator>();
     builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
-
     builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
     builder.Services.AddScoped<ICommentFactory, CommentFactory>();
     builder.Services.AddScoped<IAddCommentService, AddCommentService>();
@@ -56,6 +52,11 @@ try
     builder.Services.AddScoped<IConfirmDeleteService, ConfirmDeleteService>();
     builder.Services.AddScoped<IGetCountryViewModelService, GetCountryViewModelService>();
     builder.Services.AddScoped<IGuessCountryService, GuessCountryService>();
+    builder.Services.AddOptions<SmtpEmailSenderOptions>()
+        .Bind(builder.Configuration.GetSection(nameof(SmtpEmailSenderOptions.SmtpEmailSender)))
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
+    builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
     var mvcBuilder = builder.Services.AddRazorPages();
 
@@ -84,7 +85,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
+    Log.Fatal(ex, "Application terminated unexpectedly.");
 }
 finally
 {

@@ -142,7 +142,7 @@ public class EnableAuthenticatorModel : PageModel
 
         SharedKey = FormatKey(unformattedKey);
 
-        AuthenticatorUri = _enableAuthenticatorService.GetQrCodeUri("CommentMap", user.UserName, unformattedKey);
+        AuthenticatorUri = _enableAuthenticatorService.GetQRCodeUri("CommentMap", user.UserName, unformattedKey);
         QrCode = _enableAuthenticatorService.GetEmbeddedSource(AuthenticatorUri);
     }
 

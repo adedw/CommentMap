@@ -1,16 +1,4 @@
 services:
-  postgres:
-    container_name: postgres
-    image: postgis/postgis:16-3.4-alpine
-    volumes:
-      - pg-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: comment-map
-      POSTGRES_USER: comment-map
-      POSTGRES_PASSWORD: P@ssw0rd
-    ports:
-      - "127.0.0.1:5432:5432"
-
   commentmap-mvc:
     image: ghcr.io/adedw/commentmap:master
     build:
@@ -28,7 +16,27 @@ services:
       Serilog__WriteTo__0__Name: Console
     container_name: commentmap-mvc
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8080:8080" 
+      
+  postgres:
+    container_name: postgres
+    image: postgis/postgis:16-3.4-alpine
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: comment-map
+      POSTGRES_USER: comment-map
+      POSTGRES_PASSWORD: P@ssw0rd
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: mailhog
+    ports:
+      - "127.0.0.1:8025:8025"
+      - "127.0.0.1:1025:1025"
+
 
 volumes:
   pg-data:

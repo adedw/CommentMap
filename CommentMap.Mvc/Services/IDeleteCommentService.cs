@@ -1,8 +1,7 @@
 ﻿
-namespace CommentMap.Mvc.Services
+namespace CommentMap.Mvc.Services;
+
+public interface IDeleteCommentService
 {
-    public interface IDeleteCommentService
-    {
-        Task DeleteCommentAsync(Guid id, CancellationToken cancellationToken = default);
-    }
+    Task DeleteCommentAsync(Guid id, CancellationToken cancellationToken = default);
 }
