@@ -1,18 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Text;
-using CommentMap.Mvc.Data.Entities;
+﻿using CommentMap.Mvc.Data.Entities;
+using CommentMap.Shared.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class IndexModel(
-    UserManager<User> userManager,
-    IEmailSender emailSender)
+public class IndexModel(UserManager<User> userManager, ISendEndpointProvider sendEndpointProvider)
     : PageModel
 {
     /// <summary>
@@ -72,7 +70,7 @@ public class IndexModel(
         return Page();
     }
 
-    public async Task<ActionResult> OnPostAsync()
+    public async Task<ActionResult> OnPostAsync(CancellationToken ct)
     {
         var user = await userManager.GetUserAsync(User);
         if (user is null)
@@ -100,11 +98,10 @@ public class IndexModel(
             "/Account/ConfirmEmailChange",
             pageHandler: null,
             values: new { area = "Identity", userId, email = Input.NewEmail, code },
-            protocol: Request.Scheme);
-        await emailSender.SendEmailAsync(
-            Input.NewEmail,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+        protocol: Request.Scheme);
+
+        var endpoint = await sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + nameof(SendChangeEmail)));
+        await endpoint.Send(new SendChangeEmail(Input.NewEmail, callbackUrl), ct);
 
         StatusMessage = "Confirmation link to change email sent. Please check your email.";
         return RedirectToPage();

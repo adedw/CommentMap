@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Text.Encodings.Web;
 using CommentMap.Mvc.Data.Entities;
+using CommentMap.Shared.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
-public class ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender)
+public class ForgotPasswordModel(UserManager<User> userManager, ISendEndpointProvider sendEndpointProvider)
     : PageModel
 {
     /// <summary>
@@ -35,7 +35,7 @@ public class ForgotPasswordModel(UserManager<User> userManager, IEmailSender ema
         public string Email { get; set; }
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         if (!ModelState.IsValid)
         {
@@ -57,13 +57,11 @@ public class ForgotPasswordModel(UserManager<User> userManager, IEmailSender ema
             "/Account/ResetPassword",
             pageHandler: null,
             values: new { area = "Identity", code, userId = user.Id },
-            protocol: Request.Scheme);
+        protocol: Request.Scheme);
 
-        await emailSender.SendEmailAsync(
-            Input.Email,
-            "Reset Password",
-            $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+        var endpoint = await sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + nameof(SendResetPasswordEmail)));
+        await endpoint.Send(new SendResetPasswordEmail(Input.Email, callbackUrl), ct);
+        
         return RedirectToPage("./ForgotPasswordConfirmation");
     }
 }
