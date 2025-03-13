@@ -1,0 +1,27 @@
+@using CommentMap.EmailSender.Templates
+@using RazorBlade
+@inherits HtmlTemplate<IEmailMessageViewModel>
+
+<mjml lang="en" dir="ltr">
+    <mj-head>
+        <mj-font name="Montserrat" href="https://fonts.googleapis.com/css2?family=Montserrat" />
+        <mj-font name="Open Sans" href="https://fonts.googleapis.com/css2?family=Open+Sans" />
+    </mj-head>
+    <mj-body background-color="#e0e0e0">
+        <mj-section background-color="#0473ce" padding="32px">
+            <mj-column>
+                <mj-text align="center" font-size="28px" color="#fbfbfb" font-family="Montserrat">COMMENT MAP</mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-section background-color="white">
+            <mj-column>
+                <mj-text align="center" font-size="24px" font-weight="bold" font-family="Montserrat">@Model.Title</mj-text>
+                <mj-divider border-color="#e0e0e0" border-width="1px"></mj-divider>
+                <mj-text font-family="Open Sans" font-weight="Bold">@Model.Subtitle</mj-text>
+                <mj-text font-family="Open Sans">@Model.Explanation</mj-text>
+                <mj-spacer />
+                <mj-button background-color="#0473ce" color="#fbfbfb" font-family="Open Sans" href="@Html.Raw(Model.CallbackURL)">@Model.ButtonText</mj-button>
+            </mj-column>
+        </mj-section>
+    </mj-body>
+</mjml>

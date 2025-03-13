@@ -1,13 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Text;
-using CommentMap.Mvc.Data.Entities;
+﻿using CommentMap.Mvc.Data.Entities;
+using CommentMap.Shared.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
@@ -17,22 +17,19 @@ public class RegisterModel : PageModel
     private readonly UserManager<User> _userManager;
     private readonly IUserStore<User> _userStore;
     private readonly IUserEmailStore<User> _emailStore;
-    private readonly ILogger<RegisterModel> _logger;
-    private readonly IEmailSender _emailSender;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
 
     public RegisterModel(
         UserManager<User> userManager,
         IUserStore<User> userStore,
         SignInManager<User> signInManager,
-        ILogger<RegisterModel> logger,
-        IEmailSender emailSender)
+        ISendEndpointProvider sendEndpointProvider)
     {
         _userManager = userManager;
         _userStore = userStore;
         _emailStore = GetEmailStore();
         _signInManager = signInManager;
-        _logger = logger;
-        _emailSender = emailSender;
+        _sendEndpointProvider = sendEndpointProvider;
     }
 
     /// <summary>
@@ -46,7 +43,8 @@ public class RegisterModel : PageModel
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
     ///     directly from your code. This API may change or be removed in future releases.
     /// </summary>
-    public string ReturnUrl { get; set; }
+    [BindProperty(SupportsGet = true)]
+    public string? ReturnUrl { get; set; }
 
     /// <summary>
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -90,38 +88,36 @@ public class RegisterModel : PageModel
     }
 
 
-    public async Task OnGetAsync(string returnUrl = null)
+    public async Task OnGetAsync()
     {
-        ReturnUrl = returnUrl;
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        ExternalLogins = [.. await _signInManager.GetExternalAuthenticationSchemesAsync()];
     }
 
-    public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
-        returnUrl ??= Url.Content("~/");
-        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        ReturnUrl ??= Url.Content("~/");
+        ExternalLogins = [.. await _signInManager.GetExternalAuthenticationSchemesAsync()];
         if (ModelState.IsValid)
         {
             var user = CreateUser();
 
-            await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+            await _userStore.SetUserNameAsync(user, Input.Email, ct);
+            await _emailStore.SetEmailAsync(user, Input.Email, ct);
             var result = await _userManager.CreateAsync(user, Input.Password);
 
             if (result.Succeeded)
             {
-                var userId = await _userManager.GetUserIdAsync(user);
+                var userId = user.Id;
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                    values: new { area = "Identity", userId, code, ReturnUrl },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + nameof(SendConfirmEmail)));
+                await endpoint.Send(new SendConfirmEmail(Input.Email, callbackUrl), ct);
 
                 if (_userManager.Options.SignIn.RequireConfirmedAccount)
                 {
@@ -130,7 +126,7 @@ public class RegisterModel : PageModel
                 else
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    return LocalRedirect(ReturnUrl);
                 }
             }
             foreach (var error in result.Errors)

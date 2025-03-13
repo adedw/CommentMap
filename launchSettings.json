@@ -6,7 +6,9 @@
       "serviceActions": {
         "commentmap-mvc": "DoNotStart",
         "postgres": "StartWithoutDebugging",
-        "mailhog": "StartWithoutDebugging"
+        "mailhog": "StartWithoutDebugging",
+        "commentmap-emailsender": "DoNotStart",
+        "rabbitmq": "StartWithoutDebugging"
       }
     }
   }

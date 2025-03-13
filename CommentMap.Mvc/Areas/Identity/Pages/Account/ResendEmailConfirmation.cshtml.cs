@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Text.Encodings.Web;
 using CommentMap.Mvc.Data.Entities;
+using CommentMap.Shared.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ResendEmailConfirmationModel(UserManager<User> userManager, IEmailSender emailSender) : PageModel
+public class ResendEmailConfirmationModel(UserManager<User> userManager, ISendEndpointProvider sendEndpointProvider)
+    : PageModel
 {
     [TempData]
     public string StatusMessage { get; set; }
@@ -43,7 +44,7 @@ public class ResendEmailConfirmationModel(UserManager<User> userManager, IEmailS
     {
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         if (!ModelState.IsValid)
         {
@@ -64,11 +65,10 @@ public class ResendEmailConfirmationModel(UserManager<User> userManager, IEmailS
             "/Account/ConfirmEmail",
             pageHandler: null,
             values: new { userId, code },
-            protocol: Request.Scheme);
-        await emailSender.SendEmailAsync(
-            Input.Email,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+        protocol: Request.Scheme);
+
+        var endpoint = await sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + nameof(SendConfirmEmail)));
+        await endpoint.Send(new SendConfirmEmail(Input.Email, callbackUrl), ct);
 
         StatusMessage = "Verification email sent. Please check your email.";
         return Page();

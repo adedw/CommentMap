@@ -1,6 +1,6 @@
 services:
   commentmap-mvc:
-    image: ghcr.io/adedw/commentmap:master
+    image: ghcr.io/adedw/commentmap-mvc:master
     build:
       context: ./CommentMap.Mvc
     depends_on:
@@ -36,7 +36,26 @@ services:
     ports:
       - "127.0.0.1:8025:8025"
       - "127.0.0.1:1025:1025"
-
+      
+  commentmap-emailsender:
+    image: ${DOCKER_REGISTRY-}commentmap-emailsender
+    build:
+      context: .
+      dockerfile: CommentMap.EmailSender/Dockerfile
+      
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:4.0.4-management
+    ports:
+      - "127.0.0.1:15672:15672"
+      - "127.0.0.1:5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: commentmap
+      RABBITMQ_DEFAULT_PASS: P@ssw0rd
+      RABBITMQ_DEFAULT_VHOST: commentmap
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/mnesia
 
 volumes:
   pg-data:
+  rabbitmq-data:

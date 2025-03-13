@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>9bf08925-dc5a-4dc1-80dc-c6bb85b1e099</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.1.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommentMap.EmailSender\CommentMap.EmailSender.csproj" />
+    <ProjectReference Include="..\CommentMap.Mvc\CommentMap.Mvc.csproj" />
+  </ItemGroup>
+
+</Project>

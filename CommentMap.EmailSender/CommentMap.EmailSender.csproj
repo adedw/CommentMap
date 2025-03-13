@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-CommentMap.EmailSender-79f62d41-e375-4e59-9348-362f9f72db30</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.11.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.2" />
+    <PackageReference Include="Mjml.Net" Version="4.7.0" />
+    <PackageReference Include="RazorBlade" Version="0.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommentMap.ServiceDefaults\CommentMap.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\CommentMap.Shared\CommentMap.Shared.csproj" />
+  </ItemGroup>
+</Project>

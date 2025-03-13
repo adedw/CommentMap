@@ -6,14 +6,18 @@ namespace CommentMap.Mvc.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddCommentMapDbContext(this IServiceCollection serviceCollection, string? connectionString = null)
+    public static IHostApplicationBuilder AddCommentMapDbContext(this IHostApplicationBuilder builder)
     {
-        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
-        dataSourceBuilder.UseNetTopologySuite();
-        var dataSource = dataSourceBuilder.Build();
+        var connectionString = builder.Configuration.GetConnectionString("comment-map");
 
-        return serviceCollection
-            .AddDbContext<ICommentMapDbContext, CommentMapDbContext>(optionsBuilder => optionsBuilder.UseNpgsql(dataSource, npgsqlOptions => npgsqlOptions.UseNetTopologySuite()))
+        builder.Services
+            .AddDbContext<ICommentMapDbContext, CommentMapDbContext>(options => options.UseNpgsql(
+                connectionString,
+                o => o.UseNetTopologySuite()))
             .AddDatabaseDeveloperPageExceptionFilter();
+
+        builder.EnrichNpgsqlDbContext<CommentMapDbContext>();
+
+        return builder;
     }
 }
