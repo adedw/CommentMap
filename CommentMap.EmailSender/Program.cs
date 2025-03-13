@@ -7,6 +7,8 @@ using Mjml.Net;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddSmtpEmailSenderServices(builder.Configuration);
 builder.Services.AddScoped<IMjmlRenderer>(_ => new MjmlRenderer());
 builder.Services.AddScoped<IMessageSenderService, MessageSenderService>();

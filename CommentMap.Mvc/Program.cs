@@ -8,6 +8,7 @@ using QRCoder;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
 
 builder.AddCommentMapDbContext();
 

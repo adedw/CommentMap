@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommentMap.ServiceDefaults\CommentMap.ServiceDefaults.csproj" />
     <ProjectReference Include="..\CommentMap.Shared\CommentMap.Shared.csproj" />
   </ItemGroup>
 

@@ -16,6 +16,8 @@ public static class ServiceCollectionExtensions
                 o => o.UseNetTopologySuite()))
             .AddDatabaseDeveloperPageExceptionFilter();
 
+        builder.EnrichNpgsqlDbContext<CommentMapDbContext>();
+
         return builder;
     }
 }

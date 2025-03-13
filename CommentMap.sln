@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommentMap.Mvc", "CommentMa
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{50841206-E858-4315-AAAF-E75A509CA5E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentMap.EmailSender", "CommentMap.EmailSender\CommentMap.EmailSender.csproj", "{2E6B5D50-ADF7-44BC-9364-2D60E162F61B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentMap.Shared", "CommentMap.Shared\CommentMap.Shared.csproj", "{9B1E3109-4300-4C8B-95E8-42C2AEF9226C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentMap.AppHost", "CommentMap.AppHost\CommentMap.AppHost.csproj", "{A2866720-D4DF-CCB4-7C4E-1D4514D4FF47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentMap.ServiceDefaults", "..\CommentMap.ServiceDefaults\CommentMap.ServiceDefaults.csproj", "{AFBB3F78-9D02-403C-A729-EC63BD60E7BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +29,22 @@ Global
 		{50841206-E858-4315-AAAF-E75A509CA5E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50841206-E858-4315-AAAF-E75A509CA5E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50841206-E858-4315-AAAF-E75A509CA5E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E6B5D50-ADF7-44BC-9364-2D60E162F61B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E6B5D50-ADF7-44BC-9364-2D60E162F61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E6B5D50-ADF7-44BC-9364-2D60E162F61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E6B5D50-ADF7-44BC-9364-2D60E162F61B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B1E3109-4300-4C8B-95E8-42C2AEF9226C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B1E3109-4300-4C8B-95E8-42C2AEF9226C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B1E3109-4300-4C8B-95E8-42C2AEF9226C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B1E3109-4300-4C8B-95E8-42C2AEF9226C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2866720-D4DF-CCB4-7C4E-1D4514D4FF47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2866720-D4DF-CCB4-7C4E-1D4514D4FF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2866720-D4DF-CCB4-7C4E-1D4514D4FF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2866720-D4DF-CCB4-7C4E-1D4514D4FF47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFBB3F78-9D02-403C-A729-EC63BD60E7BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFBB3F78-9D02-403C-A729-EC63BD60E7BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFBB3F78-9D02-403C-A729-EC63BD60E7BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFBB3F78-9D02-403C-A729-EC63BD60E7BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
