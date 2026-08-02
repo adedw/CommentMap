@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="CommentMap.AppHost/CommentMap.AppHost.csproj" />
+  <Project Path="CommentMap.Application/CommentMap.Application.csproj" />
+  <Project Path="CommentMap.EmailSender/CommentMap.EmailSender.csproj" />
+  <Project Path="CommentMap.Infrastructure/CommentMap.Infrastructure.csproj" />
+  <Project Path="CommentMap.MigrationService/CommentMap.MigrationService.csproj" />
+  <Project Path="CommentMap.Mvc/CommentMap.Mvc.csproj" />
+  <Project Path="CommentMap.ServiceDefaults/CommentMap.ServiceDefaults.csproj" />
+  <Project Path="CommentMap.Shared/CommentMap.Shared.csproj" />
+</Solution>
