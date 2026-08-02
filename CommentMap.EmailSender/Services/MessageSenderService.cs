@@ -4,7 +4,7 @@ using Mjml.Net;
 
 namespace CommentMap.EmailSender.Services;
 
-public class MessageSenderService(ISmtpEmailSenderService smtpEmailSenderService, IMjmlRenderer mjmlRenderer)
+public class MessageSenderService(ISmtpEmailSender smtpEmailSenderService, IMjmlRenderer mjmlRenderer)
     : IMessageSenderService
 {
     public async Task SendConfirmationLinkAsync(string email, string callbackURL, CancellationToken ct = default)

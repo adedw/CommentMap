@@ -4,13 +4,34 @@ using CommentMap.Mvc.Extensions.DependencyInjection;
 using CommentMap.Mvc.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
+using CommentMap.Shared.Messages;
+using JasperFx;
+using JasperFx.CodeGeneration;
+using JasperFx.CodeGeneration.Model;
 using QRCoder;
+using Wolverine;
+using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
 builder.AddCommentMapDbContext();
+builder.Host.UseWolverine(opts =>
+{
+    opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Static;
+    opts.ServiceLocationPolicy = ServiceLocationPolicy.AlwaysAllowed;
+    opts.Discovery.IncludeAssembly(typeof(AddComment).Assembly);
+
+    opts.UseRabbitMqUsingNamedConnection("messaging")
+        .AutoProvision();
+
+    opts.PublishMessage<SendConfirmEmail>().ToRabbitQueue(nameof(SendConfirmEmail));
+    opts.PublishMessage<SendResetPasswordEmail>().ToRabbitQueue(nameof(SendResetPasswordEmail));
+    opts.PublishMessage<SendChangeEmail>().ToRabbitQueue(nameof(SendChangeEmail));
+});
+
+builder.AddInfrastructure();
 
 builder.Services
     .AddIdentity<User, Role>(options =>
@@ -55,10 +76,10 @@ builder.Services.AddMassTransit(x =>
         cfg.Host(host);
     });
 });
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -76,4 +97,4 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
-app.Run();
+return await app.RunJasperFxCommands(args);

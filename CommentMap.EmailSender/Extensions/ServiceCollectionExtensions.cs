@@ -6,20 +6,40 @@ namespace CommentMap.EmailSender.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddSmtpEmailSenderServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    private const string DefaultConfigSectionName = "Aspire:Mailpit";
+
+    public static IHostApplicationBuilder AddSmtpEmailSenderServices(
+        this IHostApplicationBuilder hostBuilder,
+        string connectionName,
+        Action<MailpitClientSettings>? configureSettings = null)
     {
-        services.AddScoped<ISmtpClient, SmtpClient>();
+        ArgumentNullException.ThrowIfNull(hostBuilder);
+        ArgumentException.ThrowIfNullOrEmpty(connectionName, nameof(connectionName));
 
-        var mailpitServiceConfiguration = configuration.GetSection(MailpitServiceOptions.SectionName);
-        services.AddOptions<MailpitServiceOptions>()
-            .Bind(mailpitServiceConfiguration)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
+        MailpitClientSettings settings = new();
 
-        services.AddScoped<ISmtpEmailSenderService, SmtpEmailSenderService>();
+        var configSection = hostBuilder.Configuration.GetSection(DefaultConfigSectionName);
+        configSection.Bind(settings);
 
-        return services;
+        if (hostBuilder.Configuration.GetConnectionString(connectionName) is string connectionString)
+        {
+            var connectionBuilder = new DbConnectionStringBuilder
+            {
+                ConnectionString = connectionString,
+            };
+
+            var smtpEndpoint = new Uri((string)connectionBuilder["Endpoint"], UriKind.Absolute);
+
+            settings.Host = smtpEndpoint.Host;
+            settings.Port = smtpEndpoint.Port;
+        }
+
+        configureSettings?.Invoke(settings);
+
+        hostBuilder.Services.AddSingleton(Microsoft.Extensions.Options.Options.Create(settings));
+        hostBuilder.Services.AddSingleton<ISmtpClientFactory, SmtpClientFactory>();
+        hostBuilder.Services.AddSingleton<ISmtpEmailSender, SmtpEmailSender>();
+
+        return hostBuilder;
     }
 }

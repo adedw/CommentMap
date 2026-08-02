@@ -1,41 +1,31 @@
 using CommentMap.EmailSender.Extensions;
 using CommentMap.EmailSender.Services;
 using CommentMap.Shared.Messages;
-using MassTransit;
+using JasperFx;
+using JasperFx.CodeGeneration;
 using Mjml.Net;
-
+using Wolverine;
+using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddSmtpEmailSenderServices(builder.Configuration);
-builder.Services.AddScoped<IMjmlRenderer>(_ => new MjmlRenderer());
-builder.Services.AddScoped<IMessageSenderService, MessageSenderService>();
+builder.AddSmtpEmailSenderServices(connectionName: "mailpit");
+builder.Services.AddSingleton<IMjmlRenderer>(new MjmlRenderer());
+builder.Services.AddSingleton<IMessageSenderService, MessageSenderService>();
 
-builder.Services.AddMassTransit(x =>
+builder.UseWolverine(opts =>
 {
-    x.AddConsumer<MessageSenderConsumer>();
+    opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Static;
 
-    x.UsingRabbitMq((context, cfg) =>
-    {
-        var configuration = context.GetRequiredService<IConfiguration>();
-        var host = configuration.GetConnectionString("messaging");
-        cfg.Host(host);
+    opts.UseRabbitMqUsingNamedConnection("messaging")
+        .AutoProvision();
 
-        cfg.ReceiveEndpoint(nameof(SendChangeEmail), endpoint =>
-        {
-            endpoint.ConfigureConsumer<MessageSenderConsumer>(context);
-        });
-        cfg.ReceiveEndpoint(nameof(SendConfirmEmail), endpoint =>
-        {
-            endpoint.ConfigureConsumer<MessageSenderConsumer>(context);
-        });
-        cfg.ReceiveEndpoint(nameof(SendResetPasswordEmail), endpoint =>
-        {
-            endpoint.ConfigureConsumer<MessageSenderConsumer>(context);
-        });
-    });
+    opts.ListenToRabbitQueue(nameof(SendConfirmEmail));
+    opts.ListenToRabbitQueue(nameof(SendResetPasswordEmail));
+    opts.ListenToRabbitQueue(nameof(SendChangeEmail));
 });
 
-builder.Build().Run();
+var host = builder.Build();
+return await host.RunJasperFxCommands(args);
