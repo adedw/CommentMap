@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommentMap.EmailSender\CommentMap.EmailSender.csproj" />
+    <ProjectReference Include="..\CommentMap.MigrationService\CommentMap.MigrationService.csproj" />
     <ProjectReference Include="..\CommentMap.Mvc\CommentMap.Mvc.csproj" />
   </ItemGroup>
 

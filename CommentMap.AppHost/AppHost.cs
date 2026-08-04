@@ -31,12 +31,16 @@ builder.AddProject<Projects.CommentMap_EmailSender>("email-sender")
     .WithReference(mailpit)
     .WaitFor(mailpit);
 
+var migrationService = builder.AddProject<Projects.CommentMap_MigrationService>("migration-service")
+    .WithReference(commentMapDb)
+    .WaitFor(commentMapDb);
 
 builder.AddProject<Projects.CommentMap_Mvc>("mvc")
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq)
     .WithReference(commentMapDb)
-    .WaitFor(commentMapDb);
+    .WaitFor(commentMapDb)
+    .WaitForCompletion(migrationService);
 
 
 builder.Build().Run();
