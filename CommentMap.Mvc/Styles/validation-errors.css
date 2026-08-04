@@ -1,4 +1,12 @@
-﻿.validation-summary-errors {
+.input-validation-error {
+  border-color: var(--bs-form-invalid-border-color);
+}
+
+.field-validation-error {
+  color: var(--bs-danger-text-emphasis);
+}
+
+.validation-summary-errors {
   background-color: var(--bs-danger-bg-subtle);
   border-radius: var(--bs-border-radius);
   border: var(--bs-border-width) var(--bs-border-style) var(--bs-danger-border-subtle);

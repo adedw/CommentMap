@@ -1,5 +1,4 @@
 ﻿@page
-@using CommentMap.Mvc.Pages.Comments
 @model AddModel
 @{
     ViewData["Title"] = "Add new comment";
@@ -51,6 +50,7 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="~/lib/knockout/build/output/knockout-latest.min.js"></script>
     <script src="~/js/addComment.min.js" asp-append-version="true"></script>
 }
