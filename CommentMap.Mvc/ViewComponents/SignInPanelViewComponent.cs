@@ -1,4 +1,4 @@
-﻿using CommentMap.Mvc.Data.Entities;
+﻿using CommentMap.Application.Entities;
 using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

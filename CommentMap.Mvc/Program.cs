@@ -1,9 +1,5 @@
-using CommentMap.Mvc.Data;
-using CommentMap.Mvc.Data.Entities;
-using CommentMap.Mvc.Extensions.DependencyInjection;
-using CommentMap.Mvc.Services;
-using MassTransit;
-using Microsoft.AspNetCore.Identity;
+using CommentMap.Application.Features.Comments;
+using CommentMap.Infrastructure.DependencyInjection;
 using CommentMap.Shared.Messages;
 using JasperFx;
 using JasperFx.CodeGeneration;
@@ -16,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddCommentMapDbContext();
 builder.Host.UseWolverine(opts =>
 {
     opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Static;
@@ -33,14 +28,6 @@ builder.Host.UseWolverine(opts =>
 
 builder.AddInfrastructure();
 
-builder.Services
-    .AddIdentity<User, Role>(options =>
-    {
-        options.Stores.MaxLengthForKeys = 128;
-        options.SignIn.RequireConfirmedAccount = true;
-    })
-    .AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<CommentMapDbContext>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -55,27 +42,7 @@ builder.Services
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     });
 builder.Services.AddSingleton<QRCodeGenerator>();
-builder.Services.AddSingleton<IEnableAuthenticatorService, EnableAuthenticatorService>();
-builder.Services.AddScoped<IListCommentsService, ListCommentsService>();
-builder.Services.AddScoped<ICommentFactory, CommentFactory>();
-builder.Services.AddScoped<IAddCommentService, AddCommentService>();
-builder.Services.AddScoped<IDeleteCommentService, DeleteCommentService>();
-builder.Services.AddScoped<IConfirmDeleteService, ConfirmDeleteService>();
-builder.Services.AddScoped<IGetCountryViewModelService, GetCountryViewModelService>();
-builder.Services.AddScoped<IGuessCountryService, GuessCountryService>();
 
-
-var mvcBuilder = builder.Services.AddRazorPages();
-
-builder.Services.AddMassTransit(x =>
-{
-    x.UsingRabbitMq((ctx, cfg) =>
-    {
-        var configuration = ctx.GetRequiredService<IConfiguration>();
-        var host = configuration.GetConnectionString("messaging");
-        cfg.Host(host);
-    });
-});
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

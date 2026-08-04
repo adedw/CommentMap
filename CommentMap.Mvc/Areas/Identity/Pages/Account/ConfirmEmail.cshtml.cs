@@ -1,36 +1,25 @@
-﻿using System.Text;
-using CommentMap.Mvc.Data.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
+using Wolverine;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
-public class ConfirmEmailModel(UserManager<User> userManager) : PageModel
+public class ConfirmEmailModel(IMessageBus bus) : PageModel
 {
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     [TempData]
     public string? StatusMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync(string userId, string code)
     {
         if (userId == null || code == null)
-        {
             return RedirectToPage("/Index");
-        }
 
-        var user = await userManager.FindByIdAsync(userId);
-        if (user == null)
-        {
+        var result = await bus.InvokeAsync<IdentityResultDto>(new ConfirmEmail(userId, code));
+        if (result.Errors.Any(e => e.Code == "UserNotFound"))
             return NotFound($"Unable to load user with ID '{userId}'.");
-        }
 
-        code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-        var result = await userManager.ConfirmEmailAsync(user, code);
         StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
         return Page();
     }

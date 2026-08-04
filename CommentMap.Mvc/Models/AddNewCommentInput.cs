@@ -12,6 +12,6 @@ public class AddNewCommentInput
     [Required]
     [StringLength(250)]
     public string? Text { get; init; }
-    
+
     public required LocationViewModel Location { get; init; }
 }

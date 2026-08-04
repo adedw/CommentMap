@@ -1,94 +1,55 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CommentMap.Mvc.Data.Entities;
-using Microsoft.AspNetCore.Identity;
+using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Models;
+using CommentMap.Mvc.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Wolverine;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class DeletePersonalDataModel : PageModel
+public class DeletePersonalDataModel(IMessageBus bus) : PageModel
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-    private readonly ILogger<DeletePersonalDataModel> _logger;
-
-    public DeletePersonalDataModel(
-        UserManager<User> userManager,
-        SignInManager<User> signInManager,
-        ILogger<DeletePersonalDataModel> logger)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _logger = logger;
-    }
-
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public class InputModel
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
     }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public bool RequirePassword { get; set; }
 
     public async Task<IActionResult> OnGet()
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-        }
+        var userId = User.FindUserId();
+        var info = await bus.InvokeAsync<GetDeleteProfileInfoResult>(new GetDeleteProfileInfo(userId));
+        if (!info.Found)
+            return NotFound($"Unable to load user with ID '{userId}'.");
 
-        RequirePassword = await _userManager.HasPasswordAsync(user);
+        RequirePassword = info.RequirePassword;
         return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-        }
+        var userId = User.FindUserId();
+        var info = await bus.InvokeAsync<GetDeleteProfileInfoResult>(new GetDeleteProfileInfo(userId));
+        if (!info.Found)
+            return NotFound($"Unable to load user with ID '{userId}'.");
 
-        RequirePassword = await _userManager.HasPasswordAsync(user);
-        if (RequirePassword)
-        {
-            if (!await _userManager.CheckPasswordAsync(user, Input.Password))
-            {
-                ModelState.AddModelError(string.Empty, "Incorrect password.");
-                return Page();
-            }
-        }
+        RequirePassword = info.RequirePassword;
+        var result = await bus.InvokeAsync<IdentityResultDto>(
+            new DeleteProfile(userId, RequirePassword ? Input.Password : null));
 
-        var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException($"Unexpected error occurred deleting user.");
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error.Description);
+            return Page();
         }
-
-        await _signInManager.SignOutAsync();
-
-        _logger.LogInformation("User with ID '{UserId}' deleted themselves.", user.Id);
 
         return Redirect("~/");
     }

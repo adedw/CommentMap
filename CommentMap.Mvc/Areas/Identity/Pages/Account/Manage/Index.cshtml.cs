@@ -1,107 +1,76 @@
-﻿using CommentMap.Mvc.Data.Entities;
+﻿using CommentMap.Application.Features.Identity;
+using CommentMap.Mvc.Extensions;
 using CommentMap.Shared.Messages;
-using MassTransit;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using Wolverine;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class IndexModel(UserManager<User> userManager, ISendEndpointProvider sendEndpointProvider)
-    : PageModel
+public class IndexModel(IMessageBus bus) : PageModel
 {
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public string? Email { get; set; }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     [TempData]
-    public string StatusMessage { get; set; }
+    public string? StatusMessage { get; set; }
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     [BindProperty]
-    public InputModel Input { get; set; }
+    public InputModel Input { get; set; } = null!;
 
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
     public class InputModel
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [Required]
         [Display(Name = "New email")]
         public string? NewEmail { get; set; }
     }
 
-    private void Load(User user)
+    private void Load(string? email)
     {
-        Email = user.Email;
-
-        Input = new InputModel
-        {
-            NewEmail = user.Email,
-        };
+        Email = email;
+        Input = new InputModel { NewEmail = email };
     }
 
     public async Task<IActionResult> OnGetAsync()
     {
-        var user = await userManager.GetUserAsync(User);
-        if (user is null)
-        {
-            return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
-        }
+        var userId = User.FindUserId();
+        var profile = await bus.InvokeAsync<GetProfileEmailResult>(new GetProfileEmail(userId));
+        if (!profile.Found)
+            return NotFound($"Unable to load user with ID '{userId}'.");
 
-        Load(user);
+        Load(profile.Email);
         return Page();
     }
 
     public async Task<ActionResult> OnPostAsync(CancellationToken ct)
     {
-        var user = await userManager.GetUserAsync(User);
-        if (user is null)
-        {
-            return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
-        }
+        var userId = User.FindUserId();
+        var profile = await bus.InvokeAsync<GetProfileEmailResult>(new GetProfileEmail(userId), ct);
+        if (!profile.Found)
+            return NotFound($"Unable to load user with ID '{userId}'.");
 
         if (!ModelState.IsValid)
         {
-            Load(user);
+            Load(profile.Email);
             return Page();
         }
 
-        var email = await userManager.GetEmailAsync(user);
-        if (Input.NewEmail == email)
+        var result = await bus.InvokeAsync<RequestEmailChangeResult>(
+            new RequestEmailChange(userId, Input.NewEmail!), ct);
+
+        if (result.Unchanged)
         {
             StatusMessage = "Your email is unchanged.";
             return RedirectToPage();
         }
 
-        var userId = user.Id;
-        var code = await userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = Url.Page(
             "/Account/ConfirmEmailChange",
             pageHandler: null,
-            values: new { area = "Identity", userId, email = Input.NewEmail, code },
-        protocol: Request.Scheme);
+            values: new { area = "Identity", userId, email = Input.NewEmail, code = result.EncodedCode },
+            protocol: Request.Scheme)!;
 
-        var endpoint = await sendEndpointProvider.GetSendEndpoint(new Uri("queue:" + nameof(SendChangeEmail)));
-        await endpoint.Send(new SendChangeEmail(Input.NewEmail, callbackUrl), ct);
+        await bus.PublishAsync(new SendChangeEmail(Input.NewEmail!, callbackUrl));
 
         StatusMessage = "Confirmation link to change email sent. Please check your email.";
         return RedirectToPage();

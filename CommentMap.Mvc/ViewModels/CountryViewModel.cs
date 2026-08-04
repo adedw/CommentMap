@@ -8,4 +8,3 @@ public class CountryViewModel
     public required string RegionName { get; set; }
     public required string SubregionName { get; set; }
 }
-

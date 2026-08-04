@@ -1,15 +1,16 @@
+using CommentMap.Application.Features.Comments;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.Models;
-using CommentMap.Mvc.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Globalization;
+using Wolverine;
 
 namespace CommentMap.Mvc.Pages.Comments;
 
 [Authorize]
-public class AddModel(IAddCommentService addCommentService) : PageModel
+public class AddModel(IMessageBus bus) : PageModel
 {
     [BindProperty]
     public required AddNewCommentInput Input { get; init; }
@@ -27,9 +28,12 @@ public class AddModel(IAddCommentService addCommentService) : PageModel
         }
 
         var userId = User.FindUserId();
-        var addCommentDto = new AddNewCommentDto(userId, Input.Title!, Input.Text!, Input.Location.Longitude!.Value, Input.Location.Latitude!.Value);
-
-        await addCommentService.AddAsync(addCommentDto, cancellationToken);
+        await bus.InvokeAsync(new AddComment(
+            userId,
+            Input.Title!,
+            Input.Text!,
+            Input.Location.Longitude!.Value,
+            Input.Location.Latitude!.Value), cancellationToken);
 
         return RedirectToPage("/Comments/Index", new { SelectedOrder });
     }

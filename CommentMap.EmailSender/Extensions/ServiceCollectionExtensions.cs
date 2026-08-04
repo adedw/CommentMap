@@ -1,6 +1,6 @@
 ﻿using CommentMap.EmailSender.Options;
 using CommentMap.EmailSender.Services;
-using MailKit.Net.Smtp;
+using System.Data.Common;
 
 namespace CommentMap.EmailSender.Extensions;
 
