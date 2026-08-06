@@ -1,0 +1,47 @@
+﻿@page
+@model ExternalLoginsModel
+@{
+    ViewData["Title"] = "Manage your external logins";
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+@if (Model.CurrentLogins?.Count > 0)
+{
+    <h3 class="text-xl font-bold">Registered logins</h3>
+    <div class="overflow-x-auto mt-4">
+        <table class="table table-zebra">
+            <tbody>
+                @foreach (var login in Model.CurrentLogins)
+                {
+                    <tr>
+                        <td>@login.ProviderDisplayName</td>
+                        @if (Model.ShowRemoveButton)
+                        {
+                            <td class="text-right">
+                                <form asp-page-handler="RemoveLogin" method="post">
+                                    <div>
+                                        <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden" />
+                                        <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden" />
+                                        <button type="submit" class="btn btn-primary btn-sm" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
+                                    </div>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@if (Model.OtherLogins?.Count > 0)
+{
+    <h4 class="text-lg font-semibold mt-6">Add another service to log in.</h4>
+    <hr class="my-4" />
+    <form asp-page-handler="LinkLogin" method="post" class="flex flex-wrap gap-2">
+        @foreach (var provider in Model.OtherLogins)
+        {
+            <button type="submit" class="btn btn-outline" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+        }
+    </form>
+}

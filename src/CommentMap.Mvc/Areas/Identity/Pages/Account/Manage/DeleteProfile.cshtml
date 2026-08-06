@@ -1,0 +1,36 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete your profile";
+}
+
+<h3 class="text-xl font-bold">@ViewData["Title"]</h3>
+
+<div class="alert alert-warning shadow-lg mt-4" role="alert">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+    </svg>
+    <div>
+        <div class="font-bold">Deletion is irreversible.</div>
+        <p>This operation will permanently remove your account, and this cannot be recovered.</p>
+    </div>
+</div>
+
+<div class="max-w-md mt-4">
+    <form method="post" class="card bg-base-100 border border-base-300 p-6 space-y-4">
+        <div asp-validation-summary="ModelOnly" class="text-error" role="alert"></div>
+        @if (Model.RequirePassword)
+        {
+            <div class="fieldset">
+                <label class="fieldset-label" asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" class="input input-bordered w-full" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
+                <span asp-validation-for="Input.Password" class="field-validation-error text-sm"></span>
+            </div>
+        }
+        <button class="w-full btn btn-lg btn-error" type="submit">Delete profile</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

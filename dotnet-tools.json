@@ -2,13 +2,6 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "microsoft.web.librarymanager.cli": {
-      "version": "2.1.175",
-      "commands": [
-        "libman"
-      ],
-      "rollForward": false
-    },
     "dotnet-ef": {
       "version": "10.0.10",
       "commands": [

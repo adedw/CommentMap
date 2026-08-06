@@ -5,5 +5,12 @@
       "command": [ "dotnet", "roslyn-language-server", "--stdio", "--autoLoadProjects" ],
       "extensions": [ ".cs", ".csx", ".razor", ".cshtml" ]
     }
+  },
+  "mcp": {
+    "aspire": {
+      "type": "local",
+      "command": [ "dotnet", "aspire", "agent", "mcp" ],
+      "enabled": true
+    }
   }
 }

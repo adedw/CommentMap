@@ -1,5 +1,5 @@
 {
   "appHost": {
-    "path": "CommentMap.AppHost/CommentMap.AppHost.csproj"
+    "path": "src/CommentMap.AppHost/CommentMap.AppHost.csproj"
   }
 }

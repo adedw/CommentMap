@@ -1,10 +1,21 @@
 <Solution>
-  <Project Path="CommentMap.AppHost/CommentMap.AppHost.csproj" />
-  <Project Path="CommentMap.Application/CommentMap.Application.csproj" />
-  <Project Path="CommentMap.EmailSender/CommentMap.EmailSender.csproj" />
-  <Project Path="CommentMap.Infrastructure/CommentMap.Infrastructure.csproj" />
-  <Project Path="CommentMap.MigrationService/CommentMap.MigrationService.csproj" />
-  <Project Path="CommentMap.Mvc/CommentMap.Mvc.csproj" />
-  <Project Path="CommentMap.ServiceDefaults/CommentMap.ServiceDefaults.csproj" />
-  <Project Path="CommentMap.Shared/CommentMap.Shared.csproj" />
+  <Folder Name="/SolutionItems/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="AGENTS.md" />
+    <File Path="aspire.config.json" />
+    <File Path="dotnet-tools.json" />
+    <File Path="LICENSE.txt" />
+    <File Path="nuget.config" />
+    <File Path="opencode.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/CommentMap.AppHost/CommentMap.AppHost.csproj" />
+  <Project Path="src/CommentMap.Application/CommentMap.Application.csproj" />
+  <Project Path="src/CommentMap.EmailSender/CommentMap.EmailSender.csproj" />
+  <Project Path="src/CommentMap.Infrastructure/CommentMap.Infrastructure.csproj" />
+  <Project Path="src/CommentMap.MigrationService/CommentMap.MigrationService.csproj" />
+  <Project Path="src/CommentMap.Mvc/CommentMap.Mvc.csproj" />
+  <Project Path="src/CommentMap.ServiceDefaults/CommentMap.ServiceDefaults.csproj" />
+  <Project Path="src/CommentMap.Shared/CommentMap.Shared.csproj" />
 </Solution>

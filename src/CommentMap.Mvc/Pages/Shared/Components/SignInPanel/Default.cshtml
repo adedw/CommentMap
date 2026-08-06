@@ -1,0 +1,30 @@
+﻿@using CommentMap.Mvc.ViewModels
+@model SignInPanelViewModel
+
+<div class="navbar">
+    @if (Model.IsSignedIn)
+    {
+        <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Account">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+            </div>
+            <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow">
+                <li><a asp-area="Identity" asp-page="/Account/Manage/Index">Account</a></li>
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    }
+    else
+    {
+        <div class="flex gap-2">
+            <a class="btn btn-ghost" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </div>
+    }
+</div>

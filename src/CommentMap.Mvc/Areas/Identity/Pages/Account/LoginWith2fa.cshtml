@@ -1,0 +1,33 @@
+﻿@page
+@model LoginWith2faModel
+@{
+    ViewData["Title"] = "Two-factor authentication";
+}
+
+<h1 class="text-2xl font-bold">@ViewData["Title"]</h1>
+<hr class="my-4" />
+<p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
+<div class="max-w-md">
+    <form method="post" asp-route-returnUrl="@Model.ReturnUrl" class="card bg-base-100 border border-base-300 p-6 space-y-4">
+        <input asp-for="RememberMe" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-error" role="alert"></div>
+        <div class="fieldset">
+            <label class="fieldset-label" asp-for="Input.TwoFactorCode">Authenticator code</label>
+            <input asp-for="Input.TwoFactorCode" class="input input-bordered w-full" autocomplete="off" />
+            <span asp-validation-for="Input.TwoFactorCode" class="field-validation-error text-sm"></span>
+        </div>
+        <label class="flex items-center gap-2 cursor-pointer">
+            <input asp-for="Input.RememberMachine" class="checkbox checkbox-primary" />
+            @Html.DisplayNameFor(m => m.Input.RememberMachine)
+        </label>
+        <button type="submit" class="w-full btn btn-lg btn-primary">Log in</button>
+    </form>
+</div>
+<p class="mt-4">
+    Don't have access to your authenticator device? You can
+    <a asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
+</p>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
