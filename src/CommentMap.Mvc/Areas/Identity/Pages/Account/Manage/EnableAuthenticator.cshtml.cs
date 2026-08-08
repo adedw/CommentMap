@@ -2,6 +2,7 @@
 using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Wolverine;
@@ -16,9 +17,6 @@ public class EnableAuthenticatorModel(IMessageBus bus) : PageModel
 
     [TempData]
     public string[]? RecoveryCodes { get; set; }
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -69,7 +67,7 @@ public class EnableAuthenticatorModel(IMessageBus bus) : PageModel
             return Page();
         }
 
-        StatusMessage = "Your authenticator app has been verified.";
+        TempData.SetStatus(StatusMessage.Success("Your authenticator app has been verified."));
 
         if (result.ShowRecoveryCodes)
         {

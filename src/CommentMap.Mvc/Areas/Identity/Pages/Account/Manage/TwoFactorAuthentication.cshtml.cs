@@ -1,5 +1,6 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Wolverine;
@@ -15,9 +16,6 @@ public class TwoFactorAuthenticationModel(IMessageBus bus) : PageModel
     public bool Is2faEnabled { get; set; }
 
     public bool IsMachineRemembered { get; set; }
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -40,7 +38,7 @@ public class TwoFactorAuthenticationModel(IMessageBus bus) : PageModel
         if (!ok)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
-        StatusMessage = "The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code.";
+        TempData.SetStatus(StatusMessage.Success("The current browser has been forgotten. When you login again from this browser you will be prompted for your 2fa code."));
         return RedirectToPage();
     }
 }

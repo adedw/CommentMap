@@ -2,6 +2,8 @@
 using CommentMap.Application.Entities;
 using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
+using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +21,6 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
     public string? ProviderDisplayName { get; set; }
 
     public string? ReturnUrl { get; set; }
-
-    [TempData]
-    public string? ErrorMessage { get; set; }
 
     public class InputModel
     {
@@ -43,14 +42,14 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
         returnUrl ??= Url.Content("~/");
         if (remoteError != null)
         {
-            ErrorMessage = $"Error from external provider: {remoteError}";
+            TempData.SetStatus(StatusMessage.Error($"Error from external provider: {remoteError}"));
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            ErrorMessage = "Error loading external login information.";
+            TempData.SetStatus(StatusMessage.Error("Error loading external login information."));
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
@@ -75,7 +74,7 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
-            ErrorMessage = "Error loading external login information during confirmation.";
+            TempData.SetStatus(StatusMessage.Error("Error loading external login information during confirmation."));
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 

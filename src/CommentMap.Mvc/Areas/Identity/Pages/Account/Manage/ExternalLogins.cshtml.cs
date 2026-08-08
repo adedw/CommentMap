@@ -2,6 +2,7 @@
 using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,6 @@ public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInMana
     public IList<UserLoginInfo> CurrentLogins { get; set; } = null!;
     public IList<AuthenticationScheme> OtherLogins { get; set; } = null!;
     public bool ShowRemoveButton { get; set; }
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -39,9 +37,9 @@ public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInMana
         var result = await bus.InvokeAsync<IdentityResultDto>(
             new RemoveExternalLogin(userId, loginProvider, providerKey));
 
-        StatusMessage = result.Succeeded
-            ? "The external login was removed."
-            : "The external login was not removed.";
+        TempData.SetStatus(result.Succeeded
+            ? StatusMessage.Success("The external login was removed.")
+            : StatusMessage.Error("The external login was not removed."));
         return RedirectToPage();
     }
 
@@ -63,9 +61,9 @@ public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInMana
 
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-        StatusMessage = result.Succeeded
-            ? "The external login was added."
-            : "The external login was not added. External logins can only be associated with one account.";
+        TempData.SetStatus(result.Succeeded
+            ? StatusMessage.Success("The external login was added.")
+            : StatusMessage.Error("The external login was not added. External logins can only be associated with one account."));
         return RedirectToPage();
     }
 }

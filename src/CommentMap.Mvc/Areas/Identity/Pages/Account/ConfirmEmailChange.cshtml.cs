@@ -1,5 +1,7 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
+using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Wolverine;
@@ -8,9 +10,6 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
 public class ConfirmEmailChangeModel(IMessageBus bus) : PageModel
 {
-    [TempData]
-    public string StatusMessage { get; set; } = null!;
-
     public async Task<IActionResult> OnGetAsync(string userId, string email, string code)
     {
         if (userId == null || email == null || code == null)
@@ -22,11 +21,11 @@ public class ConfirmEmailChangeModel(IMessageBus bus) : PageModel
 
         if (!result.Succeeded)
         {
-            StatusMessage = "Error changing email.";
+            TempData.SetStatus(StatusMessage.Error("Error changing email."));
             return Page();
         }
 
-        StatusMessage = "Thank you for confirming your email change.";
+        TempData.SetStatus(StatusMessage.Success("Thank you for confirming your email change."));
         return Page();
     }
 }

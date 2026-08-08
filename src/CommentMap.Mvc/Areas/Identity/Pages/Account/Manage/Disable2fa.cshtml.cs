@@ -1,5 +1,6 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Wolverine;
@@ -8,9 +9,6 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
 public class Disable2faModel(IMessageBus bus) : PageModel
 {
-    [TempData]
-    public string? StatusMessage { get; set; }
-
     public async Task<IActionResult> OnGet()
     {
         var userId = User.FindUserId();
@@ -30,7 +28,7 @@ public class Disable2faModel(IMessageBus bus) : PageModel
         if (!ok)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
-        StatusMessage = "2fa has been disabled. You can reenable 2fa when you setup an authenticator app";
+        TempData.SetStatus(StatusMessage.Success("2fa has been disabled. You can reenable 2fa when you setup an authenticator app"));
         return RedirectToPage("./TwoFactorAuthentication");
     }
 }

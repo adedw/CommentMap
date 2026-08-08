@@ -1,5 +1,6 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Wolverine;
@@ -10,9 +11,6 @@ public class GenerateRecoveryCodesModel(IMessageBus bus) : PageModel
 {
     [TempData]
     public string[]? RecoveryCodes { get; set; }
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     public async Task<IActionResult> OnGetAsync()
     {
@@ -34,7 +32,7 @@ public class GenerateRecoveryCodesModel(IMessageBus bus) : PageModel
             return NotFound($"Unable to load user with ID '{userId}'.");
 
         RecoveryCodes = result.RecoveryCodes;
-        StatusMessage = "You have generated new recovery codes.";
+        TempData.SetStatus(StatusMessage.Success("You have generated new recovery codes."));
         return RedirectToPage("./ShowRecoveryCodes");
     }
 }

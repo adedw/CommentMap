@@ -1,6 +1,7 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -12,9 +13,6 @@ public class ChangePasswordModel(IMessageBus bus) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     public class InputModel
     {
@@ -66,7 +64,7 @@ public class ChangePasswordModel(IMessageBus bus) : PageModel
             return Page();
         }
 
-        StatusMessage = "Your password has been changed.";
+        TempData.SetStatus(StatusMessage.Success("Your password has been changed."));
         return RedirectToPage();
     }
 }

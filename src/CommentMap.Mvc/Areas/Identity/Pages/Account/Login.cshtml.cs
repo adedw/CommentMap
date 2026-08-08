@@ -19,9 +19,6 @@ public class LoginModel(IMessageBus bus, SignInManager<User> signInManager) : Pa
 
     public string ReturnUrl { get; set; } = null!;
 
-    [TempData]
-    public string? ErrorMessage { get; set; }
-
     public class InputModel
     {
         [Required]
@@ -38,9 +35,6 @@ public class LoginModel(IMessageBus bus, SignInManager<User> signInManager) : Pa
 
     public async Task OnGetAsync(string? returnUrl = null)
     {
-        if (!string.IsNullOrEmpty(ErrorMessage))
-            ModelState.AddModelError(string.Empty, ErrorMessage);
-
         returnUrl ??= Url.Content("~/");
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CommentMap.Application.Features.Identity;
+using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using CommentMap.Shared.Messages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +13,6 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 [AllowAnonymous]
 public class ResendEmailConfirmationModel(IMessageBus bus) : PageModel
 {
-    [TempData]
-    public string? StatusMessage { get; set; }
-
     [BindProperty]
     public InputModel Input { get; set; } = null!;
 
@@ -50,7 +49,7 @@ public class ResendEmailConfirmationModel(IMessageBus bus) : PageModel
 
         await bus.PublishAsync(new SendConfirmEmail(Input.Email, callbackUrl));
 
-        StatusMessage = "Verification email sent. Please check your email.";
+        TempData.SetStatus(StatusMessage.Success("Verification email sent. Please check your email."));
         return Page();
     }
 }

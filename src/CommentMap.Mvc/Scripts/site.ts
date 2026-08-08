@@ -23,9 +23,3 @@ themeToggle?.addEventListener("change", () => {
   localStorage.setItem(STORAGE_KEY, theme);
   applyTheme(theme);
 });
-
-document.querySelectorAll<HTMLElement>("[data-alert-dismiss]").forEach((button) => {
-  button.addEventListener("click", () => {
-    button.closest("[data-alert]")?.remove();
-  });
-});

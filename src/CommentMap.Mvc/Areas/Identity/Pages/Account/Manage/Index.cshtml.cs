@@ -1,5 +1,6 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using CommentMap.Shared.Messages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,9 +12,6 @@ namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 public class IndexModel(IMessageBus bus) : PageModel
 {
     public string? Email { get; set; }
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -60,7 +58,7 @@ public class IndexModel(IMessageBus bus) : PageModel
 
         if (result.Unchanged)
         {
-            StatusMessage = "Your email is unchanged.";
+            TempData.SetStatus(StatusMessage.Info("Your email is unchanged."));
             return RedirectToPage();
         }
 
@@ -72,7 +70,7 @@ public class IndexModel(IMessageBus bus) : PageModel
 
         await bus.PublishAsync(new SendChangeEmail(Input.NewEmail!, callbackUrl));
 
-        StatusMessage = "Confirmation link to change email sent. Please check your email.";
+        TempData.SetStatus(StatusMessage.Info("Confirmation link to change email sent. Please check your email."));
         return RedirectToPage();
     }
 }

@@ -2,6 +2,7 @@
 using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
+using CommentMap.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Wolverine;
@@ -12,9 +13,6 @@ public class SetPasswordModel(IMessageBus bus) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
-
-    [TempData]
-    public string? StatusMessage { get; set; }
 
     public class InputModel
     {
@@ -60,7 +58,7 @@ public class SetPasswordModel(IMessageBus bus) : PageModel
             return Page();
         }
 
-        StatusMessage = "Your password has been set.";
+        TempData.SetStatus(StatusMessage.Success("Your password has been set."));
         return RedirectToPage();
     }
 }
