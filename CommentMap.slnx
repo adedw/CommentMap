@@ -9,6 +9,7 @@
     <File Path="nuget.config" />
     <File Path="opencode.json" />
     <File Path="README.md" />
+    <File Path="skills-lock.json" />
   </Folder>
   <Project Path="src/CommentMap.AppHost/CommentMap.AppHost.csproj" />
   <Project Path="src/CommentMap.Application/CommentMap.Application.csproj" />
