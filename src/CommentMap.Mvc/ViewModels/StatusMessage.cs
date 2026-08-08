@@ -1,6 +1,6 @@
 namespace CommentMap.Mvc.ViewModels;
 
-public enum StatusType { Info, Success, Error}
+public enum StatusType { Info, Success, Error }
 
 /// <summary>
 /// Represents a status message shown to the user via the StatusAlert view component.

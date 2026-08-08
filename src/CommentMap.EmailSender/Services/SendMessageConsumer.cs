@@ -1,6 +1,5 @@
 ﻿using CommentMap.EmailSender.Logging;
 using CommentMap.Shared.Messages;
-using Microsoft.Extensions.Logging;
 
 namespace CommentMap.EmailSender.Services;
 

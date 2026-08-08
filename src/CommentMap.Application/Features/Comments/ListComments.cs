@@ -1,11 +1,12 @@
 using CommentMap.Application.Abstractions;
 using CommentMap.Application.Entities;
 using CommentMap.Application.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace CommentMap.Application.Features.Comments;
 
-public record ListComments(Guid UserId, Order Order);
+public record ListComments(Guid UserId, CommentSort Sort);
 
 public static class ListCommentsHandler
 {
@@ -18,7 +19,7 @@ public static class ListCommentsHandler
             .Where(c => c.UserId == query.UserId)
             .Where(c => !c.IsDeleted);
 
-        commentsQuery = OrderBy(commentsQuery, query.Order);
+        commentsQuery = OrderBy(commentsQuery, query.Sort);
 
         return await commentsQuery
             .Select(c => new CommentCardDto(
@@ -31,11 +32,11 @@ public static class ListCommentsHandler
             .ToListAsync(cancellationToken);
     }
 
-    private static IQueryable<Comment> OrderBy(IQueryable<Comment> queryable, Order order) =>
+    private static IQueryable<Comment> OrderBy(IQueryable<Comment> queryable, CommentSort order) =>
         order switch
         {
-            Order.CreatedAt => queryable.OrderBy(c => c.Id),
-            Order.Title => queryable.OrderBy(c => c.Title),
+            CommentSort.CreatedAt => queryable.OrderByDescending(c => c.CreatedAt),
+            CommentSort.Title => queryable.OrderBy(c => c.Title),
             _ => throw new ArgumentOutOfRangeException(nameof(order), order, "Unexpected order value."),
         };
 }

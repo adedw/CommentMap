@@ -21,9 +21,9 @@ const markerIconStyle = new Style({
 
 const root = document.getElementById("root");
 if (root) {
-  const elements = document.querySelectorAll<HTMLElement>("[data-location]");
-  const coordinates: Coordinate[] = Array.from(elements).map((element) =>
-    JSON.parse(element.getAttribute("data-location")!)
+  const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-location]"));
+  const coordinates: Coordinate[] = cards.map((card) =>
+    JSON.parse(card.getAttribute("data-location")!)
   );
 
   const first = coordinates.length > 0 ? coordinates[0] : [0, 0];
@@ -60,9 +60,10 @@ if (root) {
     map.getView().setCenter(coordinate);
   }
 
-  document.querySelectorAll<HTMLElement>("[data-goto-location]").forEach((element) => {
-    element.addEventListener("click", () => {
-      goToLocation(JSON.parse(element.dataset["gotoLocation"]!));
+  root.querySelectorAll<HTMLElement>("[data-goto-location]").forEach((button) => {
+    const card = button.closest<HTMLElement>("[data-location]");
+    button.addEventListener("click", () => {
+      goToLocation(JSON.parse(card!.getAttribute("data-location")!));
     });
   });
 }

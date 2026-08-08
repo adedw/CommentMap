@@ -1,9 +1,12 @@
 using CommentMap.EmailSender.Extensions;
 using CommentMap.EmailSender.Services;
 using CommentMap.Shared.Messages;
+
 using JasperFx;
 using JasperFx.CodeGeneration;
+
 using Mjml.Net;
+
 using Wolverine;
 using Wolverine.RabbitMQ;
 

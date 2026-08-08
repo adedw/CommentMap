@@ -1,6 +1,4 @@
-﻿using Mjml.Net;
-
-namespace CommentMap.EmailSender.Logging;
+﻿namespace CommentMap.EmailSender.Logging;
 
 internal static partial class Log
 {
@@ -10,13 +8,13 @@ internal static partial class Log
         Message = "A confirmation email has been sent to '{Email}'.")]
     public static partial void LogConfirmationEmailSent(this ILogger loger, string email);
 
-    
+
     [LoggerMessage(
         EventId = 1001,
         Level = LogLevel.Information,
         Message = "A reset password email has been sent to '{Email}'.")]
     public static partial void LogResetPasswordEmailSent(this ILogger loger, string email);
-    
+
     [LoggerMessage(
         EventId = 1002,
         Level = LogLevel.Information,

@@ -1,5 +1,6 @@
 ﻿using CommentMap.EmailSender.Exceptions;
 using CommentMap.EmailSender.Templates;
+
 using Mjml.Net;
 
 namespace CommentMap.EmailSender.Services;

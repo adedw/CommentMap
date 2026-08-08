@@ -1,8 +1,17 @@
-﻿namespace CommentMap.Mvc.ViewModels;
+﻿using System.Text.Json;
+
+namespace CommentMap.Mvc.ViewModels;
 
 public record CommentCardViewModel(
     Guid Id,
-    LocationViewModel Location,
+    double Longitude,
+    double Latitude,
     string Title,
     string Text,
-    DateTime CreatedAt);
+    DateTime CreatedAt)
+{
+    /// <summary>
+    /// Coordinates as a JSON array in [longitude, latitude] order (EPSG:3857 values).
+    /// </summary>
+    public string CoordinatesJson => JsonSerializer.Serialize(new[] { Longitude, Latitude });
+}

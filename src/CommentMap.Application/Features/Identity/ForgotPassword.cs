@@ -1,7 +1,9 @@
+using System.Text;
+
 using CommentMap.Application.Entities;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace CommentMap.Application.Features.Identity;
 

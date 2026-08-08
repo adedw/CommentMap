@@ -1,10 +1,13 @@
-using CommentMap.Application.Entities;
-using CommentMap.Application.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using QRCoder;
 using System.Text;
 using System.Text.Encodings.Web;
+
+using CommentMap.Application.Entities;
+using CommentMap.Application.Models;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+
+using QRCoder;
 
 namespace CommentMap.Application.Features.Identity;
 

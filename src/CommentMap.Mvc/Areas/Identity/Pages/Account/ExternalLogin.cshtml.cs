@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 using CommentMap.Application.Entities;
 using CommentMap.Application.Features.Identity;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using Wolverine;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;

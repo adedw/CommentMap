@@ -1,6 +1,8 @@
 using CommentMap.Application.Abstractions;
 using CommentMap.Application.Entities;
+
 using Microsoft.EntityFrameworkCore;
+
 using NetTopologySuite.Geometries;
 
 namespace CommentMap.Application.Features.Comments;

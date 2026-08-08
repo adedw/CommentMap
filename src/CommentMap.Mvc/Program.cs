@@ -1,10 +1,13 @@
 using CommentMap.Application.Features.Comments;
 using CommentMap.Infrastructure.DependencyInjection;
 using CommentMap.Shared.Messages;
+
 using JasperFx;
 using JasperFx.CodeGeneration;
 using JasperFx.CodeGeneration.Model;
+
 using QRCoder;
+
 using Wolverine;
 using Wolverine.RabbitMQ;
 

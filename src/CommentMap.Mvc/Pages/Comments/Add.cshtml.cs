@@ -1,10 +1,12 @@
+using System.Globalization;
+
 using CommentMap.Application.Features.Comments;
 using CommentMap.Mvc.Extensions;
-using CommentMap.Mvc.Models;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Globalization;
+
 using Wolverine;
 
 namespace CommentMap.Mvc.Pages.Comments;
@@ -14,9 +16,6 @@ public class AddModel(IMessageBus bus) : PageModel
 {
     [BindProperty]
     public required AddNewCommentInput Input { get; init; }
-
-    [BindProperty(SupportsGet = true)]
-    public int SelectedOrder { get; set; }
 
     public string? CurrentLocale { get; private set; }
 
@@ -32,10 +31,10 @@ public class AddModel(IMessageBus bus) : PageModel
             userId,
             Input.Title!,
             Input.Text!,
-            Input.Location.Longitude!.Value,
-            Input.Location.Latitude!.Value), cancellationToken);
+            Input.Longitude!.Value,
+            Input.Latitude!.Value), cancellationToken);
 
-        return RedirectToPage("/Comments/Index", new { SelectedOrder });
+        return RedirectToPage("/Comments/Index");
     }
 
     public void OnGet()

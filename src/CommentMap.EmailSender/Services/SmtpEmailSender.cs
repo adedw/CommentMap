@@ -1,6 +1,9 @@
 ﻿using CommentMap.EmailSender.Options;
+
 using MailKit.Security;
+
 using Microsoft.Extensions.Options;
+
 using MimeKit;
 
 namespace CommentMap.EmailSender.Services;
@@ -34,7 +37,7 @@ public class SmtpEmailSender : ISmtpEmailSender
         _fromAddress = new MailboxAddress(value.FromName, value.FromAddress);
     }
 
-   public async Task SendHtmlEmailAsync(string to, string subject, string htmlBody, CancellationToken ct = default)
+    public async Task SendHtmlEmailAsync(string to, string subject, string htmlBody, CancellationToken ct = default)
     {
         var message = new MimeMessage();
         message.From.Add(_fromAddress);

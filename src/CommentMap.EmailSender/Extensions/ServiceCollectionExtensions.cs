@@ -1,6 +1,7 @@
-﻿using CommentMap.EmailSender.Options;
+﻿using System.Data.Common;
+
+using CommentMap.EmailSender.Options;
 using CommentMap.EmailSender.Services;
-using System.Data.Common;
 
 namespace CommentMap.EmailSender.Extensions;
 

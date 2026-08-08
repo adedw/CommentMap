@@ -1,9 +1,8 @@
 ﻿@page
+@using CommentMap.Application.Models
 @model IndexModel
 @{
     ViewData["Title"] = "My comments";
-    var selectedOrder = (int)Model.SelectedOrder;
-    ViewData["SelectedOrder"] = selectedOrder;
 }
 
 @section Styles {
@@ -13,7 +12,7 @@
 <h1 class="text-2xl font-bold mb-4">My comments</h1>
 
 <div class="flex flex-wrap items-center gap-2 mb-4" role="toolbar" aria-label="Comments actions">
-    <a class="btn btn-outline btn-primary" role="button" asp-page="/Comments/Add" asp-route-SelectedOrder="@selectedOrder">
+    <a class="btn btn-outline btn-primary" role="button" asp-page="/Comments/Add">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
@@ -21,7 +20,7 @@
     </a>
     <form method="get" class="join">
         <div>
-            <select class="select select-bordered select-sm" aria-label="Sort order" asp-items="Html.GetEnumSelectList<Order>()" asp-for="SelectedOrder"></select>
+            <select class="select select-bordered select-sm" aria-label="Sort order" asp-items="Html.GetEnumSelectList<CommentSort>()" asp-for="Sort"></select>
         </div>
         <button type="submit" class="btn btn-outline btn-primary btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">
@@ -39,7 +38,7 @@
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
                 @foreach (var comment in Model.Comments)
                 {
-                    <partial name="_CommentCardPartial" model="comment" view-data="ViewData" />
+                    <partial name="_CommentCardPartial" model="comment" />
                 }
             </div>
         </div>

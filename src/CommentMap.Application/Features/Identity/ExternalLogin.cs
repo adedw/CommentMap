@@ -1,8 +1,10 @@
+using System.Security.Claims;
+
 using CommentMap.Application.Entities;
 using CommentMap.Application.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace CommentMap.Application.Features.Identity;
 

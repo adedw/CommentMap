@@ -1,8 +1,10 @@
 ﻿using CommentMap.Application.Features.Identity;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using Wolverine;
 
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
