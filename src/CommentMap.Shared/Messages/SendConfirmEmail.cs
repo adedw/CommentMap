@@ -1,3 +1,3 @@
 ﻿namespace CommentMap.Shared.Messages;
 
-public record SendConfirmEmail(string Email, string CallbackURL);
+public record SendConfirmEmail(string Email, string CallbackURL) : IntegrationEvent;

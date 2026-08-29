@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using CommentMap.Application.Abstractions;
 using CommentMap.Application.Entities;
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Features.Identity.Commands;
 using CommentMap.Application.Models;
 
 using Microsoft.AspNetCore.Authentication;
@@ -9,11 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
-public class LoginModel(IMessageBus bus, SignInManager<User> signInManager) : PageModel
+public class LoginModel(ICommandHandler<LoginUserCommand, LoginResultDto> loginUserCommandHandler, SignInManager<User> signInManager) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -36,7 +35,7 @@ public class LoginModel(IMessageBus bus, SignInManager<User> signInManager) : Pa
         public bool RememberMe { get; set; }
     }
 
-    public async Task OnGetAsync(string? returnUrl = null)
+    public async Task OnGetAsync(string? returnUrl = null, CancellationToken ct = default)
     {
         returnUrl ??= Url.Content("~/");
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -44,7 +43,7 @@ public class LoginModel(IMessageBus bus, SignInManager<User> signInManager) : Pa
         ReturnUrl = returnUrl;
     }
 
-    public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null, CancellationToken ct = default)
     {
         returnUrl ??= Url.Content("~/");
         ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -52,8 +51,8 @@ public class LoginModel(IMessageBus bus, SignInManager<User> signInManager) : Pa
         if (!ModelState.IsValid)
             return Page();
 
-        var result = await bus.InvokeAsync<LoginResultDto>(
-            new LoginUser(Input.Email, Input.Password, Input.RememberMe));
+        var result = await loginUserCommandHandler.Handle(
+            new LoginUserCommand(Input.Email, Input.Password, Input.RememberMe), ct);
 
         if (result.Succeeded)
             return LocalRedirect(returnUrl);

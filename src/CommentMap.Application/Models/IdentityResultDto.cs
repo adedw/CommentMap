@@ -2,12 +2,25 @@ namespace CommentMap.Application.Models;
 
 public record IdentityErrorDto(string Code, string Description);
 
-public record IdentityResultDto(bool Succeeded, IReadOnlyList<IdentityErrorDto> Errors)
+public enum IdentityFailure
 {
-    public static IdentityResultDto Success() => new(true, []);
+    None,
+    UserNotFound,
+    IncorrectPassword,
+}
+
+public record IdentityResultDto(bool Succeeded, IdentityFailure Failure, IReadOnlyList<IdentityErrorDto> Errors)
+{
+    public static IdentityResultDto Success() => new(true, IdentityFailure.None, []);
 
     public static IdentityResultDto Failed(IEnumerable<IdentityErrorDto> errors) =>
-        new(false, [.. errors]);
+        new(false, IdentityFailure.None, [.. errors]);
+
+    public static IdentityResultDto UserNotFound() =>
+        new(false, IdentityFailure.UserNotFound, [new IdentityErrorDto("UserNotFound", "Unable to load user.")]);
+
+    public static IdentityResultDto IncorrectPassword() =>
+        new(false, IdentityFailure.IncorrectPassword, [new IdentityErrorDto("Password", "Incorrect password.")]);
 }
 
 public record LoginResultDto(

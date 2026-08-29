@@ -1,18 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Features.Identity.Queries;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class ChangePasswordModel(IMessageBus bus) : PageModel
+[Authorize]
+public class ChangePasswordModel(IQueryHandler<HasPasswordQuery, HasPasswordResult> hasPasswordQueryHandler, ICommandHandler<ChangePasswordCommand, IdentityResultDto> changePasswordCommandHandler) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -36,10 +38,10 @@ public class ChangePasswordModel(IMessageBus bus) : PageModel
         public string ConfirmPassword { get; set; } = null!;
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var hasPassword = await bus.InvokeAsync<HasPasswordResult>(new HasPassword(userId));
+        var hasPassword = await hasPasswordQueryHandler.Handle(new HasPasswordQuery(userId), ct);
         if (!hasPassword.Found)
             return NotFound($"Unable to load user with ID '{userId}'.");
         if (!hasPassword.HasPassword)
@@ -48,18 +50,18 @@ public class ChangePasswordModel(IMessageBus bus) : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return Page();
 
         var userId = User.FindUserId();
-        var result = await bus.InvokeAsync<IdentityResultDto>(
-            new ChangePassword(userId, Input.OldPassword, Input.NewPassword));
+        var result = await changePasswordCommandHandler.Handle(
+            new ChangePasswordCommand(userId, Input.OldPassword, Input.NewPassword), ct);
 
         if (!result.Succeeded)
         {
-            if (result.Errors.Any(e => e.Code == "UserNotFound"))
+            if (result.Failure == IdentityFailure.UserNotFound)
                 return NotFound($"Unable to load user with ID '{userId}'.");
 
             foreach (var error in result.Errors)

@@ -1,18 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Features.Identity.Queries;
+using CommentMap.EventBus.Abstractions;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 using CommentMap.Shared.Messages;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class IndexModel(IMessageBus bus) : PageModel
+[Authorize]
+public class IndexModel(IQueryHandler<GetProfileEmailQuery, GetProfileEmailResult> getProfileEmailQueryHandler, ICommandHandler<RequestEmailChangeCommand, RequestEmailChangeResult> requestEmailChangeCommandHandler, IEventBus eventBus) : PageModel
 {
     public string? Email { get; set; }
 
@@ -32,10 +35,10 @@ public class IndexModel(IMessageBus bus) : PageModel
         Input = new InputModel { NewEmail = email };
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var profile = await bus.InvokeAsync<GetProfileEmailResult>(new GetProfileEmail(userId));
+        var profile = await getProfileEmailQueryHandler.Handle(new GetProfileEmailQuery(userId), ct);
         if (!profile.Found)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
@@ -46,7 +49,7 @@ public class IndexModel(IMessageBus bus) : PageModel
     public async Task<ActionResult> OnPostAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var profile = await bus.InvokeAsync<GetProfileEmailResult>(new GetProfileEmail(userId), ct);
+        var profile = await getProfileEmailQueryHandler.Handle(new GetProfileEmailQuery(userId), ct);
         if (!profile.Found)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
@@ -56,8 +59,8 @@ public class IndexModel(IMessageBus bus) : PageModel
             return Page();
         }
 
-        var result = await bus.InvokeAsync<RequestEmailChangeResult>(
-            new RequestEmailChange(userId, Input.NewEmail!), ct);
+        var result = await requestEmailChangeCommandHandler.Handle(
+            new RequestEmailChangeCommand(userId, Input.NewEmail!), ct);
 
         if (result.Unchanged)
         {
@@ -71,7 +74,7 @@ public class IndexModel(IMessageBus bus) : PageModel
             values: new { area = "Identity", userId, email = Input.NewEmail, code = result.EncodedCode },
             protocol: Request.Scheme)!;
 
-        await bus.PublishAsync(new SendChangeEmail(Input.NewEmail!, callbackUrl));
+        await eventBus.PublishAsync(new SendChangeEmail(Input.NewEmail!, callbackUrl));
 
         TempData.SetStatus(StatusMessage.Info("Confirmation link to change email sent. Please check your email."));
         return RedirectToPage();

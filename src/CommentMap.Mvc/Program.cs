@@ -1,35 +1,19 @@
-using CommentMap.Application.Features.Comments;
+using CommentMap.Application;
+using CommentMap.Application.Features.Identity;
 using CommentMap.Infrastructure.DependencyInjection;
-using CommentMap.Shared.Messages;
-
-using JasperFx;
-using JasperFx.CodeGeneration;
-using JasperFx.CodeGeneration.Model;
 
 using QRCoder;
-
-using Wolverine;
-using Wolverine.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Host.UseWolverine(opts =>
-{
-    opts.CodeGeneration.TypeLoadMode = TypeLoadMode.Static;
-    opts.ServiceLocationPolicy = ServiceLocationPolicy.AlwaysAllowed;
-    opts.Discovery.IncludeAssembly(typeof(AddComment).Assembly);
-
-    opts.UseRabbitMqUsingNamedConnection("messaging")
-        .AutoProvision();
-
-    opts.PublishMessage<SendConfirmEmail>().ToRabbitQueue(nameof(SendConfirmEmail));
-    opts.PublishMessage<SendResetPasswordEmail>().ToRabbitQueue(nameof(SendResetPasswordEmail));
-    opts.PublishMessage<SendChangeEmail>().ToRabbitQueue(nameof(SendChangeEmail));
-});
+builder.Services.AddMessageHandlers();
+builder.AddEventBus("messaging");
 
 builder.AddInfrastructure();
+
+builder.Services.Configure<AuthenticatorOptions>(builder.Configuration.GetSection("Authenticator"));
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -73,4 +57,4 @@ app.MapRazorPages();
 
 app.MapDefaultEndpoints();
 
-return await app.RunJasperFxCommands(args);
+app.Run();

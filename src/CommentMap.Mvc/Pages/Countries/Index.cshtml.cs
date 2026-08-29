@@ -1,17 +1,16 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Countries;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Countries.Queries;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.ViewModels;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Pages.Countries;
 
-public class IndexModel(IMessageBus bus) : PageModel
+public class IndexModel(IQueryHandler<GetCountryQuery, CountryDto?> getCountryQueryHandler) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     [Required(ErrorMessage = "ISO 3166-1 alpha-3 code required.")]
@@ -27,7 +26,7 @@ public class IndexModel(IMessageBus bus) : PageModel
             return Page();
         }
 
-        var dto = await bus.InvokeAsync<CountryDto?>(new GetCountry(ISO3Code!), cancellationToken);
+        var dto = await getCountryQueryHandler.Handle(new GetCountryQuery(ISO3Code!), cancellationToken);
         if (dto is not null)
         {
             Country = new CountryViewModel

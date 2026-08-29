@@ -1,18 +1,17 @@
-using System.Globalization;
+﻿using System.Globalization;
 
-using CommentMap.Application.Features.Comments;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Comments.Commands;
 using CommentMap.Mvc.Extensions;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Pages.Comments;
 
 [Authorize]
-public class AddModel(IMessageBus bus) : PageModel
+public class AddModel(ICommandHandler<AddCommentCommand> addCommentCommandHandler) : PageModel
 {
     [BindProperty]
     public required AddNewCommentInput Input { get; init; }
@@ -27,7 +26,7 @@ public class AddModel(IMessageBus bus) : PageModel
         }
 
         var userId = User.FindUserId();
-        await bus.InvokeAsync(new AddComment(
+        await addCommentCommandHandler.Handle(new AddCommentCommand(
             userId,
             Input.Title!,
             Input.Text!,
@@ -37,7 +36,7 @@ public class AddModel(IMessageBus bus) : PageModel
         return RedirectToPage("/Comments/Index");
     }
 
-    public void OnGet()
+    public void OnGet(CancellationToken ct)
     {
         CurrentLocale = CultureInfo.CurrentCulture.Name;
     }

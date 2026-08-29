@@ -28,18 +28,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
     <PackageReference Include="QRCoder" />
-    <PackageReference Include="WolverineFx" />
-    <PackageReference Include="WolverineFx.RabbitMQ" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <PackageReference Include="WolverineFx.RuntimeCompilation" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CommentMap.Application\CommentMap.Application.csproj" />
+    <ProjectReference Include="..\CommentMap.EventBus\CommentMap.EventBus.csproj" />
     <ProjectReference Include="..\CommentMap.Infrastructure\CommentMap.Infrastructure.csproj" />
     <ProjectReference Include="..\CommentMap.ServiceDefaults\CommentMap.ServiceDefaults.csproj" />
     <ProjectReference Include="..\CommentMap.Shared\CommentMap.Shared.csproj" />

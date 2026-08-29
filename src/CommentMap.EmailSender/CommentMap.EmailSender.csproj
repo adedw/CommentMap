@@ -12,15 +12,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Mjml.Net" />
     <PackageReference Include="RazorBlade" />
-    <PackageReference Include="WolverineFx" />
-    <PackageReference Include="WolverineFx.RabbitMQ" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
-    <PackageReference Include="WolverineFx.RuntimeCompilation" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommentMap.EventBus\CommentMap.EventBus.csproj" />
     <ProjectReference Include="..\CommentMap.ServiceDefaults\CommentMap.ServiceDefaults.csproj" />
     <ProjectReference Include="..\CommentMap.Shared\CommentMap.Shared.csproj" />
   </ItemGroup>

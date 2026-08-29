@@ -1,18 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Features.Identity.Queries;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class EnableAuthenticatorModel(IMessageBus bus) : PageModel
+[Authorize]
+public class EnableAuthenticatorModel(IQueryHandler<GetAuthenticatorSetupQuery, AuthenticatorSetupDto?> getAuthenticatorSetupQueryHandler, ICommandHandler<EnableAuthenticatorCommand, EnableAuthenticatorResultDto> enableAuthenticatorCommandHandler) : PageModel
 {
     public string SharedKey { get; set; } = null!;
     public string AuthenticatorUri { get; set; } = null!;
@@ -33,10 +35,10 @@ public class EnableAuthenticatorModel(IMessageBus bus) : PageModel
         public string Code { get; set; } = null!;
     }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var setup = await bus.InvokeAsync<AuthenticatorSetupDto?>(new GetAuthenticatorSetup(userId));
+        var setup = await getAuthenticatorSetupQueryHandler.Handle(new GetAuthenticatorSetupQuery(userId), ct);
         if (setup is null)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
@@ -44,21 +46,21 @@ public class EnableAuthenticatorModel(IMessageBus bus) : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
 
         if (!ModelState.IsValid)
         {
-            var setup = await bus.InvokeAsync<AuthenticatorSetupDto?>(new GetAuthenticatorSetup(userId));
+            var setup = await getAuthenticatorSetupQueryHandler.Handle(new GetAuthenticatorSetupQuery(userId), ct);
             if (setup is null)
                 return NotFound($"Unable to load user with ID '{userId}'.");
             ApplySetup(setup);
             return Page();
         }
 
-        var result = await bus.InvokeAsync<EnableAuthenticatorResultDto>(
-            new EnableAuthenticator(userId, Input.Code));
+        var result = await enableAuthenticatorCommandHandler.Handle(
+            new EnableAuthenticatorCommand(userId, Input.Code), ct);
 
         if (result is { Succeeded: false, Setup: null })
             return NotFound($"Unable to load user with ID '{userId}'.");

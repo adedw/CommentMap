@@ -1,15 +1,17 @@
-﻿using CommentMap.Application.Features.Identity;
+﻿using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Features.Identity.Queries;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class TwoFactorAuthenticationModel(IMessageBus bus) : PageModel
+[Authorize]
+public class TwoFactorAuthenticationModel(IQueryHandler<GetTwoFactorStatusQuery, TwoFactorStatusDto> getTwoFactorStatusQueryHandler, ICommandHandler<ForgetTwoFactorClientCommand, bool> forgetTwoFactorClientCommandHandler) : PageModel
 {
     public bool HasAuthenticator { get; set; }
     public int RecoveryCodesLeft { get; set; }
@@ -19,10 +21,10 @@ public class TwoFactorAuthenticationModel(IMessageBus bus) : PageModel
 
     public bool IsMachineRemembered { get; set; }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var status = await bus.InvokeAsync<TwoFactorStatusDto>(new GetTwoFactorStatus(userId));
+        var status = await getTwoFactorStatusQueryHandler.Handle(new GetTwoFactorStatusQuery(userId), ct);
         if (!status.Found)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
@@ -33,10 +35,10 @@ public class TwoFactorAuthenticationModel(IMessageBus bus) : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var ok = await bus.InvokeAsync<bool>(new ForgetTwoFactorClient(userId));
+        var ok = await forgetTwoFactorClientCommandHandler.Handle(new ForgetTwoFactorClientCommand(userId), ct);
         if (!ok)
             return NotFound($"Unable to load user with ID '{userId}'.");
 

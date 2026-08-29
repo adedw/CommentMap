@@ -1,3 +1,3 @@
 ﻿namespace CommentMap.Shared.Messages;
 
-public record SendResetPasswordEmail(string Email, string CallbackURL);
+public record SendResetPasswordEmail(string Email, string CallbackURL) : IntegrationEvent;

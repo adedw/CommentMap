@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
 using CommentMap.Application.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
-public class LoginWith2faModel(IMessageBus bus) : PageModel
+public class LoginWith2faModel(ICommandHandler<LoginWith2FACommand, LoginResultDto> loginWith2faCommandHandler) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -31,22 +30,22 @@ public class LoginWith2faModel(IMessageBus bus) : PageModel
         public bool RememberMachine { get; set; }
     }
 
-    public Task<IActionResult> OnGetAsync(bool rememberMe, string? returnUrl = null)
+    public Task<IActionResult> OnGetAsync(bool rememberMe, string? returnUrl = null, CancellationToken ct = default)
     {
         ReturnUrl = returnUrl;
         RememberMe = rememberMe;
         return Task.FromResult<IActionResult>(Page());
     }
 
-    public async Task<IActionResult> OnPostAsync(bool rememberMe, string? returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(bool rememberMe, string? returnUrl = null, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
             return Page();
 
         returnUrl ??= Url.Content("~/");
 
-        var result = await bus.InvokeAsync<LoginResultDto>(
-            new LoginWith2fa(Input.TwoFactorCode, rememberMe, Input.RememberMachine));
+        var result = await loginWith2faCommandHandler.Handle(
+            new LoginWith2FACommand(Input.TwoFactorCode, rememberMe, Input.RememberMachine), ct);
 
         if (result.Succeeded)
             return LocalRedirect(returnUrl);

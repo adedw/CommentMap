@@ -55,8 +55,7 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddMeter("Wolverine:CommentMap.EmailSender")
-                    .AddMeter("Wolverine:CommentMap.Mvc");
+                    .AddMeter("CommentMap.EventBus");
             })
             .WithTracing(tracing =>
             {
@@ -65,7 +64,7 @@ public static class Extensions
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
                     //.AddGrpcClientInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddSource("Wolverine");
+                    .AddSource("CommentMap.EventBus");
             });
 
         builder.AddOpenTelemetryExporters();

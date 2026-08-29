@@ -1,30 +1,32 @@
-﻿using CommentMap.Application.Features.Identity;
+﻿using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Features.Identity.Queries;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class ResetAuthenticatorModel(IMessageBus bus) : PageModel
+[Authorize]
+public class ResetAuthenticatorModel(IQueryHandler<GetTwoFactorStatusQuery, TwoFactorStatusDto> getTwoFactorStatusQueryHandler, ICommandHandler<ResetAuthenticatorCommand, bool> resetAuthenticatorCommandHandler) : PageModel
 {
-    public async Task<IActionResult> OnGet()
+    public async Task<IActionResult> OnGet(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var status = await bus.InvokeAsync<TwoFactorStatusDto>(new GetTwoFactorStatus(userId));
+        var status = await getTwoFactorStatusQueryHandler.Handle(new GetTwoFactorStatusQuery(userId), ct);
         if (!status.Found)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var ok = await bus.InvokeAsync<bool>(new ResetAuthenticator(userId));
+        var ok = await resetAuthenticatorCommandHandler.Handle(new ResetAuthenticatorCommand(userId), ct);
         if (!ok)
             return NotFound($"Unable to load user with ID '{userId}'.");
 

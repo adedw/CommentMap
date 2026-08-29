@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.EventBus.Abstractions;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 using CommentMap.Shared.Messages;
@@ -9,12 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ResendEmailConfirmationModel(IMessageBus bus) : PageModel
+public class ResendEmailConfirmationModel(ICommandHandler<ResendEmailConfirmationCommand, ResendEmailConfirmationResult> resendEmailConfirmationCommandHandler, IEventBus eventBus) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -26,7 +26,7 @@ public class ResendEmailConfirmationModel(IMessageBus bus) : PageModel
         public string Email { get; set; } = null!;
     }
 
-    public void OnGet()
+    public void OnGet(CancellationToken ct)
     {
     }
 
@@ -35,8 +35,8 @@ public class ResendEmailConfirmationModel(IMessageBus bus) : PageModel
         if (!ModelState.IsValid)
             return Page();
 
-        var result = await bus.InvokeAsync<ResendEmailConfirmationResult>(
-            new ResendEmailConfirmation(Input.Email), ct);
+        var result = await resendEmailConfirmationCommandHandler.Handle(
+            new ResendEmailConfirmationCommand(Input.Email), ct);
 
         if (!result.UserFound)
         {
@@ -50,7 +50,7 @@ public class ResendEmailConfirmationModel(IMessageBus bus) : PageModel
             values: new { userId = result.UserId, code = result.EncodedCode },
             protocol: Request.Scheme)!;
 
-        await bus.PublishAsync(new SendConfirmEmail(Input.Email, callbackUrl));
+        await eventBus.PublishAsync(new SendConfirmEmail(Input.Email, callbackUrl));
 
         TempData.SetStatus(StatusMessage.Success("Verification email sent. Please check your email."));
         return Page();

@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using CommentMap.Application.Abstractions;
 using CommentMap.Application.Entities;
 using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Features.Identity.Commands;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
@@ -11,12 +13,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
 [AllowAnonymous]
-public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManager) : PageModel
+public class ExternalLoginModel(ICommandHandler<ExternalLoginSignInCommand, LoginResultDto> externalLoginSignInCommandHandler, ICommandHandler<CreateExternalUserCommand, IdentityResultDto> createExternalUserCommandHandler, SignInManager<User> signInManager) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -31,16 +31,16 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
         public string UserName { get; set; } = null!;
     }
 
-    public IActionResult OnGet() => RedirectToPage("./Login");
+    public IActionResult OnGet(CancellationToken ct) => RedirectToPage("./Login");
 
-    public IActionResult OnPost(string provider, string? returnUrl = null)
+    public IActionResult OnPost(string provider, string? returnUrl = null, CancellationToken ct = default)
     {
         var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
         var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
         return new ChallengeResult(provider, properties);
     }
 
-    public async Task<IActionResult> OnGetCallbackAsync(string? returnUrl = null, string? remoteError = null)
+    public async Task<IActionResult> OnGetCallbackAsync(string? returnUrl = null, string? remoteError = null, CancellationToken ct = default)
     {
         returnUrl ??= Url.Content("~/");
         if (remoteError != null)
@@ -56,8 +56,8 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
             return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
-        var result = await bus.InvokeAsync<LoginResultDto>(
-            new ExternalLoginSignIn(info.LoginProvider, info.ProviderKey));
+        var result = await externalLoginSignInCommandHandler.Handle(
+            new ExternalLoginSignInCommand(info.LoginProvider, info.ProviderKey), ct);
 
         if (result.Succeeded)
             return LocalRedirect(returnUrl);
@@ -71,7 +71,7 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
         return Page();
     }
 
-    public async Task<IActionResult> OnPostConfirmationAsync(string? returnUrl = null)
+    public async Task<IActionResult> OnPostConfirmationAsync(string? returnUrl = null, CancellationToken ct = default)
     {
         returnUrl ??= Url.Content("~/");
         var info = await signInManager.GetExternalLoginInfoAsync();
@@ -83,8 +83,8 @@ public class ExternalLoginModel(IMessageBus bus, SignInManager<User> signInManag
 
         if (ModelState.IsValid)
         {
-            var result = await bus.InvokeAsync<IdentityResultDto>(
-                new CreateExternalUser(Input.UserName, info));
+            var result = await createExternalUserCommandHandler.Handle(
+                new CreateExternalUserCommand(Input.UserName, info), ct);
 
             if (result.Succeeded)
                 return LocalRedirect(returnUrl);

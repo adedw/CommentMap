@@ -1,15 +1,15 @@
-using CommentMap.Application.Features.Comments;
+﻿using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Comments.Queries;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
 
 namespace CommentMap.Mvc.Pages.Comments;
 
 [Authorize]
-public class EditModel(IMessageBus bus) : PageModel
+public class EditModel(IQueryHandler<GetCommentTitleQuery, string?> getCommentTitleQueryHandler) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     public Guid Id { get; set; }
@@ -21,7 +21,7 @@ public class EditModel(IMessageBus bus) : PageModel
 
     public async Task<PageResult> OnGetAsync(CancellationToken cancellationToken)
     {
-        Title = await bus.InvokeAsync<string?>(new GetCommentTitle(Id), cancellationToken);
+        Title = await getCommentTitleQueryHandler.Handle(new GetCommentTitleQuery(Id), cancellationToken);
         return Page();
     }
 

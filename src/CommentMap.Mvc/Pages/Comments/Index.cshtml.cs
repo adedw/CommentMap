@@ -1,4 +1,5 @@
-﻿using CommentMap.Application.Features.Comments;
+﻿using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Comments.Queries;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
@@ -7,12 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Pages.Comments;
 
 [Authorize]
-public class IndexModel(IMessageBus bus) : PageModel
+public class IndexModel(IQueryHandler<ListCommentsQuery, List<CommentCardDto>> ListCommentsQueryHandler) : PageModel
 {
     private const string SortCookieName = "CM.Comments.Sort";
 
@@ -33,8 +32,8 @@ public class IndexModel(IMessageBus bus) : PageModel
         var userId = User.FindUserId();
         Sort = ResolveSort();
 
-        var items = await bus.InvokeAsync<List<CommentCardDto>>(
-            new ListComments(userId, Sort.Value), cancellationToken);
+        var items = await ListCommentsQueryHandler.Handle(
+            new ListCommentsQuery(userId, Sort.Value), cancellationToken);
 
         Comments = [.. items.Select(c => new CommentCardViewModel(
             c.Id,

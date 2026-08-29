@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Features.Identity.Commands;
 using CommentMap.Application.Models;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
-public class ResetPasswordModel(IMessageBus bus) : PageModel
+public class ResetPasswordModel(ICommandHandler<ResetPasswordCommand, IdentityResultDto> resetPasswordCommandHandler) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -42,13 +41,13 @@ public class ResetPasswordModel(IMessageBus bus) : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return Page();
 
-        var result = await bus.InvokeAsync<IdentityResultDto>(
-            new ResetPassword(UserId!, Code!, Input.Password));
+        var result = await resetPasswordCommandHandler.Handle(
+            new ResetPasswordCommand(UserId!, Code!, Input.Password), ct);
 
         if (result.Succeeded)
             return RedirectToPage("./ResetPasswordConfirmation");

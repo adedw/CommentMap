@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using CommentMap.Application.Abstractions;
 using CommentMap.Application.Entities;
-using CommentMap.Application.Features.Identity;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.EventBus.Abstractions;
 using CommentMap.Shared.Messages;
 
 using Microsoft.AspNetCore.Authentication;
@@ -9,11 +11,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
 
-public class RegisterModel(IMessageBus bus, SignInManager<User> signInManager) : PageModel
+public class RegisterModel(ICommandHandler<RegisterUserCommand, RegisterUserResult> registerUserCommandHandler, ICommandHandler<SignInAfterRegistrationCommand> signInAfterRegistrationCommandHandler, IEventBus eventBus, SignInManager<User> signInManager) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = null!;
@@ -42,7 +42,7 @@ public class RegisterModel(IMessageBus bus, SignInManager<User> signInManager) :
         public string ConfirmPassword { get; set; } = null!;
     }
 
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(CancellationToken ct)
     {
         ExternalLogins = [.. await signInManager.GetExternalAuthenticationSchemesAsync()];
     }
@@ -54,8 +54,8 @@ public class RegisterModel(IMessageBus bus, SignInManager<User> signInManager) :
         if (!ModelState.IsValid)
             return Page();
 
-        var result = await bus.InvokeAsync<RegisterUserResult>(
-            new RegisterUser(Input.Email, Input.Password), ct);
+        var result = await registerUserCommandHandler.Handle(
+            new RegisterUserCommand(Input.Email, Input.Password), ct);
 
         if (!result.Succeeded)
         {
@@ -70,12 +70,12 @@ public class RegisterModel(IMessageBus bus, SignInManager<User> signInManager) :
             values: new { area = "Identity", userId = result.UserId, code = result.EncodedEmailConfirmationCode, ReturnUrl },
             protocol: Request.Scheme)!;
 
-        await bus.PublishAsync(new SendConfirmEmail(Input.Email, callbackUrl));
+        await eventBus.PublishAsync(new SendConfirmEmail(Input.Email, callbackUrl));
 
         if (result.RequireConfirmedAccount)
             return RedirectToPage("RegisterConfirmation");
 
-        await bus.InvokeAsync(new SignInAfterRegistration(result.UserId!.Value), ct);
+        await signInAfterRegistrationCommandHandler.Handle(new SignInAfterRegistrationCommand(result.UserId!.Value), ct);
         return LocalRedirect(ReturnUrl);
     }
 }

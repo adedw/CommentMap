@@ -1,28 +1,30 @@
-﻿using CommentMap.Application.Entities;
-using CommentMap.Application.Features.Identity;
+﻿using CommentMap.Application.Abstractions;
+using CommentMap.Application.Entities;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Features.Identity.Queries;
 using CommentMap.Application.Models;
 using CommentMap.Mvc.Extensions;
 using CommentMap.Mvc.ViewModels;
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Wolverine;
-
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
-public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInManager) : PageModel
+[Authorize]
+public class ExternalLoginsModel(IQueryHandler<GetExternalLoginsQuery, ExternalLoginsDto> getExternalLoginsQueryHandler, ICommandHandler<RemoveExternalLoginCommand, IdentityResultDto> removeExternalLoginCommandHandler, ICommandHandler<LinkExternalLoginCommand, IdentityResultDto> linkExternalLoginCommandHandler, SignInManager<User> signInManager) : PageModel
 {
     public IList<UserLoginInfo> CurrentLogins { get; set; } = null!;
     public IList<AuthenticationScheme> OtherLogins { get; set; } = null!;
     public bool ShowRemoveButton { get; set; }
 
-    public async Task<IActionResult> OnGetAsync()
+    public async Task<IActionResult> OnGetAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var dto = await bus.InvokeAsync<ExternalLoginsDto>(new GetExternalLogins(userId));
+        var dto = await getExternalLoginsQueryHandler.Handle(new GetExternalLoginsQuery(userId), ct);
         if (!dto.Found)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
@@ -33,11 +35,11 @@ public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInMana
         return Page();
     }
 
-    public async Task<IActionResult> OnPostRemoveLoginAsync(string loginProvider, string providerKey)
+    public async Task<IActionResult> OnPostRemoveLoginAsync(string loginProvider, string providerKey, CancellationToken ct = default)
     {
         var userId = User.FindUserId();
-        var result = await bus.InvokeAsync<IdentityResultDto>(
-            new RemoveExternalLogin(userId, loginProvider, providerKey));
+        var result = await removeExternalLoginCommandHandler.Handle(
+            new RemoveExternalLoginCommand(userId, loginProvider, providerKey), ct);
 
         TempData.SetStatus(result.Succeeded
             ? StatusMessage.Success("The external login was removed.")
@@ -45,7 +47,7 @@ public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInMana
         return RedirectToPage();
     }
 
-    public async Task<IActionResult> OnPostLinkLoginAsync(string provider)
+    public async Task<IActionResult> OnPostLinkLoginAsync(string provider, CancellationToken ct = default)
     {
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         var redirectUrl = Url.Page("./ExternalLogins", pageHandler: "LinkLoginCallback");
@@ -54,11 +56,11 @@ public class ExternalLoginsModel(IMessageBus bus, SignInManager<User> signInMana
         return new ChallengeResult(provider, properties);
     }
 
-    public async Task<IActionResult> OnGetLinkLoginCallbackAsync()
+    public async Task<IActionResult> OnGetLinkLoginCallbackAsync(CancellationToken ct)
     {
         var userId = User.FindUserId();
-        var result = await bus.InvokeAsync<IdentityResultDto>(new LinkExternalLogin(userId));
-        if (result.Errors.Any(e => e.Code == "UserNotFound"))
+        var result = await linkExternalLoginCommandHandler.Handle(new LinkExternalLoginCommand(userId), ct);
+        if (result.Failure == IdentityFailure.UserNotFound)
             return NotFound($"Unable to load user with ID '{userId}'.");
 
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);

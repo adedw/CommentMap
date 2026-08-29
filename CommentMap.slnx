@@ -16,6 +16,7 @@
   <Project Path="src/CommentMap.AppHost/CommentMap.AppHost.csproj" />
   <Project Path="src/CommentMap.Application/CommentMap.Application.csproj" />
   <Project Path="src/CommentMap.EmailSender/CommentMap.EmailSender.csproj" />
+  <Project Path="src/CommentMap.EventBus/CommentMap.EventBus.csproj" />
   <Project Path="src/CommentMap.Infrastructure/CommentMap.Infrastructure.csproj" />
   <Project Path="src/CommentMap.MigrationService/CommentMap.MigrationService.csproj" />
   <Project Path="src/CommentMap.Mvc/CommentMap.Mvc.csproj" />
