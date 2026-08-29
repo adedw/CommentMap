@@ -14,8 +14,9 @@ public class SmtpEmailSender : ISmtpEmailSender
     private readonly MailboxAddress _fromAddress;
     private readonly string _host;
     private readonly int _port;
+    private readonly SecureSocketOptions _security;
 
-    public SmtpEmailSender(ISmtpClientFactory smtpClientFactory, IOptions<MailpitClientSettings> options)
+    public SmtpEmailSender(ISmtpClientFactory smtpClientFactory, IOptions<SmtpSettings> options)
     {
         var value = options.Value;
         if (string.IsNullOrEmpty(value.Host))
@@ -34,6 +35,7 @@ public class SmtpEmailSender : ISmtpEmailSender
         _smtpClientFactory = smtpClientFactory;
         _host = value.Host;
         _port = value.Port.Value;
+        _security = value.Security;
         _fromAddress = new MailboxAddress(value.FromName, value.FromAddress);
     }
 
@@ -53,7 +55,7 @@ public class SmtpEmailSender : ISmtpEmailSender
 
         using var smtpClient = _smtpClientFactory.CreateClient();
 
-        await smtpClient.ConnectAsync(_host, _port, SecureSocketOptions.None, ct);
+        await smtpClient.ConnectAsync(_host, _port, _security, ct);
         await smtpClient.SendAsync(message, ct);
         await smtpClient.DisconnectAsync(quit: true, ct);
     }

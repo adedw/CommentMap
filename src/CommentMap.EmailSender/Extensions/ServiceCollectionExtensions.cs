@@ -7,17 +7,17 @@ namespace CommentMap.EmailSender.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    private const string DefaultConfigSectionName = "Aspire:Mailpit";
+    private const string DefaultConfigSectionName = "Aspire:Smtp";
 
     public static IHostApplicationBuilder AddSmtpEmailSenderServices(
         this IHostApplicationBuilder hostBuilder,
         string connectionName,
-        Action<MailpitClientSettings>? configureSettings = null)
+        Action<SmtpSettings>? configureSettings = null)
     {
         ArgumentNullException.ThrowIfNull(hostBuilder);
         ArgumentException.ThrowIfNullOrEmpty(connectionName, nameof(connectionName));
 
-        MailpitClientSettings settings = new();
+        SmtpSettings settings = new();
 
         var configSection = hostBuilder.Configuration.GetSection(DefaultConfigSectionName);
         configSection.Bind(settings);

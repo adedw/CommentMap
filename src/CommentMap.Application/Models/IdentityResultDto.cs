@@ -16,11 +16,6 @@ public record LoginResultDto(
     bool IsLockedOut,
     bool IsNotAllowed);
 
-public record RegisterResultDto(
-    bool Succeeded,
-    bool RequireConfirmedAccount,
-    IReadOnlyList<IdentityErrorDto> Errors);
-
 public record AuthenticatorSetupDto(string SharedKey, string AuthenticatorUri, string QrCodeEmbedded);
 
 public record EnableAuthenticatorResultDto(

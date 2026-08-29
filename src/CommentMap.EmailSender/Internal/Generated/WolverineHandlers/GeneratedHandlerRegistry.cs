@@ -11,7 +11,7 @@ namespace Internal.Generated.WolverineHandlers
 
         public override System.Type[] HandlerTypes()
         {
-            return new System.Type[] { typeof(CommentMap.EmailSender.Services.MessageSenderHandler), typeof(CommentMap.EmailSender.Services.SendMessageConsumer) };
+            return new System.Type[] { typeof(CommentMap.EmailSender.Services.MessageSenderHandler) };
         }
 
 

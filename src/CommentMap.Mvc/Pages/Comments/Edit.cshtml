@@ -1,0 +1,25 @@
+@page "{id:guid}"
+@model EditModel
+@{
+    ViewData["Title"] = "Edit comment";
+}
+
+<div class="card bg-base-100 border border-base-300 max-w-xl shadow-sm">
+    <div class="card-body">
+        <h1 class="card-title text-xl">Edit comment</h1>
+        <p class="text-base-content/70">Editing &quot;@Model.Title&quot;</p>
+        <form method="post" class="mt-2 space-y-4">
+            <input type="hidden" asp-for="Id" />
+            <div>
+                <label asp-for="Text" class="label">Text</label>
+                <textarea asp-for="Text" class="textarea textarea-bordered w-full" rows="4"></textarea>
+                <span asp-validation-for="Text" class="text-error"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

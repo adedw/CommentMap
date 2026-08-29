@@ -11,13 +11,11 @@ namespace Internal.Generated.WolverineHandlers
     {
         private readonly CommentMap.EmailSender.Services.IMessageSenderService _messageSenderService;
         private readonly Microsoft.Extensions.Logging.ILoggerFactory _loggerFactory;
-        private readonly Microsoft.Extensions.Logging.ILogger<CommentMap.EmailSender.Services.SendMessageConsumer> _loggerOfSendMessageConsumer;
 
-        public SendConfirmEmailHandler111886888(CommentMap.EmailSender.Services.IMessageSenderService messageSenderService, Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, Microsoft.Extensions.Logging.ILogger<CommentMap.EmailSender.Services.SendMessageConsumer> loggerOfSendMessageConsumer)
+        public SendConfirmEmailHandler111886888(CommentMap.EmailSender.Services.IMessageSenderService messageSenderService, Microsoft.Extensions.Logging.ILoggerFactory loggerFactory)
         {
             _messageSenderService = messageSenderService;
             _loggerFactory = loggerFactory;
-            _loggerOfSendMessageConsumer = loggerOfSendMessageConsumer;
         }
 
 
@@ -27,14 +25,11 @@ namespace Internal.Generated.WolverineHandlers
             // The actual message body
             var sendConfirmEmail = (CommentMap.Shared.Messages.SendConfirmEmail)context.Envelope.Message;
 
-            var sendMessageConsumer = new CommentMap.EmailSender.Services.SendMessageConsumer(_messageSenderService, _loggerOfSendMessageConsumer);
+            System.Diagnostics.Activity.Current?.SetTag("message.handler", "CommentMap.EmailSender.Services.MessageSenderHandler");
+            System.Diagnostics.Activity.Current?.SetTag("handler.type", "CommentMap.EmailSender.Services.MessageSenderHandler");
             
             // The actual message execution
             await CommentMap.EmailSender.Services.MessageSenderHandler.Handle(sendConfirmEmail, _messageSenderService, _loggerFactory, cancellation).ConfigureAwait(false);
-
-            
-            // The actual message execution
-            await sendMessageConsumer.ConsumeAsync(sendConfirmEmail, cancellation).ConfigureAwait(false);
 
         }
 

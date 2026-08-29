@@ -71,4 +71,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapDefaultEndpoints();
+
 return await app.RunJasperFxCommands(args);

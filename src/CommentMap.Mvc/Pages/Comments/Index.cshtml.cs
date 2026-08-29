@@ -16,7 +16,7 @@ public class IndexModel(IMessageBus bus) : PageModel
 {
     private const string SortCookieName = "CM.Comments.Sort";
 
-    private static readonly CookieOptions SortCookieOptions = new()
+    private static CookieOptions CreateSortCookieOptions() => new()
     {
         HttpOnly = true,
         SameSite = SameSiteMode.Lax,
@@ -65,7 +65,7 @@ public class IndexModel(IMessageBus bus) : PageModel
         {
             if (!string.Equals(cookieSort, querySort.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                Response.Cookies.Append(SortCookieName, querySort.ToString(), SortCookieOptions);
+                Response.Cookies.Append(SortCookieName, querySort.ToString(), CreateSortCookieOptions());
             }
 
             return querySort;

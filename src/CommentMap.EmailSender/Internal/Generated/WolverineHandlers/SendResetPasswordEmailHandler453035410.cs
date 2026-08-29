@@ -11,13 +11,11 @@ namespace Internal.Generated.WolverineHandlers
     {
         private readonly CommentMap.EmailSender.Services.IMessageSenderService _messageSenderService;
         private readonly Microsoft.Extensions.Logging.ILoggerFactory _loggerFactory;
-        private readonly Microsoft.Extensions.Logging.ILogger<CommentMap.EmailSender.Services.SendMessageConsumer> _loggerOfSendMessageConsumer;
 
-        public SendResetPasswordEmailHandler453035410(CommentMap.EmailSender.Services.IMessageSenderService messageSenderService, Microsoft.Extensions.Logging.ILoggerFactory loggerFactory, Microsoft.Extensions.Logging.ILogger<CommentMap.EmailSender.Services.SendMessageConsumer> loggerOfSendMessageConsumer)
+        public SendResetPasswordEmailHandler453035410(CommentMap.EmailSender.Services.IMessageSenderService messageSenderService, Microsoft.Extensions.Logging.ILoggerFactory loggerFactory)
         {
             _messageSenderService = messageSenderService;
             _loggerFactory = loggerFactory;
-            _loggerOfSendMessageConsumer = loggerOfSendMessageConsumer;
         }
 
 
@@ -27,14 +25,11 @@ namespace Internal.Generated.WolverineHandlers
             // The actual message body
             var sendResetPasswordEmail = (CommentMap.Shared.Messages.SendResetPasswordEmail)context.Envelope.Message;
 
-            var sendMessageConsumer = new CommentMap.EmailSender.Services.SendMessageConsumer(_messageSenderService, _loggerOfSendMessageConsumer);
+            System.Diagnostics.Activity.Current?.SetTag("message.handler", "CommentMap.EmailSender.Services.MessageSenderHandler");
+            System.Diagnostics.Activity.Current?.SetTag("handler.type", "CommentMap.EmailSender.Services.MessageSenderHandler");
             
             // The actual message execution
             await CommentMap.EmailSender.Services.MessageSenderHandler.Handle(sendResetPasswordEmail, _messageSenderService, _loggerFactory, cancellation).ConfigureAwait(false);
-
-            
-            // The actual message execution
-            await sendMessageConsumer.ConsumeAsync(sendResetPasswordEmail, cancellation).ConfigureAwait(false);
 
         }
 

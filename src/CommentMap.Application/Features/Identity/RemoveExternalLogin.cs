@@ -2,30 +2,27 @@ using CommentMap.Application.Entities;
 using CommentMap.Application.Models;
 
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace CommentMap.Application.Features.Identity;
 
-public record ChangePassword(Guid UserId, string OldPassword, string NewPassword);
+public record RemoveExternalLogin(Guid UserId, string LoginProvider, string ProviderKey);
 
-public static class ChangePasswordHandler
+public static class RemoveExternalLoginHandler
 {
     public static async Task<IdentityResultDto> Handle(
-        ChangePassword command,
+        RemoveExternalLogin command,
         UserManager<User> userManager,
-        SignInManager<User> signInManager,
-        ILogger<ChangePassword> logger)
+        SignInManager<User> signInManager)
     {
         var user = await userManager.FindByIdAsync(command.UserId.ToString());
         if (user is null)
             return IdentityResultDto.Failed([new IdentityErrorDto("UserNotFound", "Unable to load user.")]);
 
-        var result = await userManager.ChangePasswordAsync(user, command.OldPassword, command.NewPassword);
+        var result = await userManager.RemoveLoginAsync(user, command.LoginProvider, command.ProviderKey);
         if (!result.Succeeded)
             return result.ToDto();
 
         await signInManager.RefreshSignInAsync(user);
-        logger.LogInformation("User changed their password successfully.");
         return IdentityResultDto.Success();
     }
 }
