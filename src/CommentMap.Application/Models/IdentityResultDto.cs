@@ -31,7 +31,7 @@ public record LoginResultDto(
 
 public record AuthenticatorSetupDto(string SharedKey, string AuthenticatorUri, string QrCodeEmbedded);
 
-public record EnableAuthenticatorResultDto(
+public record EnableAuthenticatorResultDTO(
     bool Succeeded,
     bool InvalidCode,
     bool ShowRecoveryCodes,

@@ -2,6 +2,7 @@
 @model GenerateRecoveryCodesModel
 @{
     ViewData["Title"] = "Generate two-factor authentication (2FA) recovery codes";
+    ViewData[ManageNavPages.ActivePageKey] = ManageNavPages.TwoFactorAuthentication;
 }
 
 <h3 class="text-xl font-bold">@ViewData["Title"]</h3>

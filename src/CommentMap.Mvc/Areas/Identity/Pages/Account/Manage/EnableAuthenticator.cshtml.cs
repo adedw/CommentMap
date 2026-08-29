@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CommentMap.Mvc.Areas.Identity.Pages.Account.Manage;
 
 [Authorize]
-public class EnableAuthenticatorModel(IQueryHandler<GetAuthenticatorSetupQuery, AuthenticatorSetupDto?> getAuthenticatorSetupQueryHandler, ICommandHandler<EnableAuthenticatorCommand, EnableAuthenticatorResultDto> enableAuthenticatorCommandHandler) : PageModel
+public class EnableAuthenticatorModel(IQueryHandler<GetAuthenticatorSetupQuery, AuthenticatorSetupDto?> getAuthenticatorSetupQueryHandler, ICommandHandler<EnableAuthenticatorCommand, EnableAuthenticatorResultDTO> enableAuthenticatorCommandHandler) : PageModel
 {
     public string SharedKey { get; set; } = null!;
     public string AuthenticatorUri { get; set; } = null!;
