@@ -34,3 +34,17 @@
 - No test projects, no lint/format config — verification = build + run via AppHost. CI: `.github/workflows/publish-container.yml` builds & pushes the Mvc container image to GHCR on push to `master` (no Dockerfile — uses `dotnet publish /t:PublishContainer`; npm/esbuild run on the runner via the `BuildJS` csproj target).
 - `opencode.json` configures the C# LSP via the local `roslyn-language-server` tool; run `dotnet tool restore` first or the LSP won't start.
 - Solution file is `CommentMap.slnx` (XML format), not `.sln`.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues on `adedw/CommentMap` (via `gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
