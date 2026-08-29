@@ -30,6 +30,7 @@ await esbuild.build({
   entryPoints: {
     "js/Comments.min": "./Pages/Comments/Index.cshtml.ts",
     "js/AddComment.min": "./Pages/Comments/Add.cshtml.ts",
+    "js/ShowRecoveryCodes.min": "./Areas/Identity/Pages/Account/Manage/ShowRecoveryCodes.cshtml.ts",
     "js/site.min": "./Scripts/site.ts",
     "css/app.min": "./Styles/app.css",
     "css/ol.min": "./node_modules/ol/ol.css",

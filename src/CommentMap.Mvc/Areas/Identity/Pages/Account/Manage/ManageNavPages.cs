@@ -12,6 +12,6 @@ public static class ManageNavPages
 
     public static string ActivePageKey => "ActivePage";
 
-    public static string NavClass(ViewContext viewContext, string page) =>
-        Equals(viewContext.ViewData[ActivePageKey], page) ? "menu-active" : "";
+    public static string NavClass(ViewContext viewContext, string page) 
+        => Equals(viewContext.ViewData[ActivePageKey], page) ? "tab tab-active" : "tab";
 }
