@@ -1,8 +1,12 @@
+using System.Data;
 using System.Diagnostics;
 
 using CommentMap.Infrastructure.Data;
+using CommentMap.MigrationService.Logging;
 
 using Microsoft.EntityFrameworkCore;
+
+using Npgsql;
 
 namespace CommentMap.MigrationService;
 
@@ -24,6 +28,7 @@ public class Migrator(
             var dbContext = scope.ServiceProvider.GetRequiredService<CommentMapDbContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
+            await SeedCountriesAsync(dbContext, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -39,9 +44,54 @@ public class Migrator(
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
-            logger.LogInformation("Applying database migrations...");
+            logger.LogApplyingMigrations();
             await dbContext.Database.MigrateAsync(cancellationToken);
-            logger.LogInformation("Database migrations applied successfully");
+            logger.LogMigrationsApplied();
+        });
+    }
+
+    private async Task SeedCountriesAsync(CommentMapDbContext dbContext, CancellationToken cancellationToken)
+    {
+        var connection = (NpgsqlConnection)dbContext.Database.GetDbConnection();
+        if (connection.State != ConnectionState.Open)
+        {
+            await connection.OpenAsync(cancellationToken);
+        }
+
+        const string countSql = """SELECT COUNT(*) FROM "Countries";""";
+        await using var countCommand = new NpgsqlCommand(countSql, connection);
+        var existing = (long)(await countCommand.ExecuteScalarAsync(cancellationToken))!;
+
+        if (existing > 0)
+        {
+            logger.LogCountriesSeedSkipped(existing);
+            return;
+        }
+
+        var assembly = typeof(Migrator).Assembly;
+        const string resourceName = "CommentMap.MigrationService.Seed.countries.sql";
+        await using var stream = assembly.GetManifestResourceStream(resourceName)
+            ?? throw new InvalidOperationException($"Embedded resource '{resourceName}' not found");
+        using var reader = new StreamReader(stream);
+        var script = await reader.ReadToEndAsync(cancellationToken);
+
+        var strategy = dbContext.Database.CreateExecutionStrategy();
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                logger.LogSeedingCountries();
+                await using var command = new NpgsqlCommand(script, connection, transaction);
+                var affected = await command.ExecuteNonQueryAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+                logger.LogCountriesSeeded(affected);
+            }
+            catch
+            {
+                await transaction.RollbackAsync(CancellationToken.None);
+                throw;
+            }
         });
     }
 }

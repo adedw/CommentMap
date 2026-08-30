@@ -14,8 +14,7 @@ public sealed class ListCommentsHandler(ICommentMapDbContext db) : IQueryHandler
     {
         var commentsQuery = db.Comments
             .AsNoTracking()
-            .Where(c => c.UserId == query.UserId)
-            .Where(c => !c.IsDeleted);
+            .Where(c => c.UserId == query.UserId);
 
         commentsQuery = OrderBy(commentsQuery, query.Sort);
 

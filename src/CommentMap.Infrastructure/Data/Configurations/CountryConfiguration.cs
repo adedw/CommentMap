@@ -11,7 +11,7 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
     {
         builder.HasKey(c => c.ISO3Code);
         builder.Property(c => c.ISO3Code).HasMaxLength(3).HasColumnType("char");
-        builder.Property(c => c.ISO2Code).HasMaxLength(2).HasColumnType("char");
+        builder.Property(c => c.ISO2Code).HasMaxLength(3).HasColumnType("char");
 
         builder.Property(c => c.Shape).HasColumnType("geometry (multipolygon, 3857)");
         builder.HasIndex(c => c.Shape).HasMethod("gist");

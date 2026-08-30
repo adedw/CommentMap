@@ -3,6 +3,7 @@ using System;
 using CommentMap.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CommentMap.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CommentMapDbContext))]
-    partial class CommentMapDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260830171336_WidenCountryISO2Code")]
+    partial class WidenCountryISO2Code
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,10 +66,6 @@ namespace CommentMap.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ISO3CodeCountry");
-
-                    b.HasIndex("IsDeleted")
-                        .HasDatabaseName("IX_Comments_IsDeleted_Filtered")
-                        .HasFilter("\"IsDeleted\" = false");
 
                     b.HasIndex("Location");
 

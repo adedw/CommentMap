@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Seed\countries.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

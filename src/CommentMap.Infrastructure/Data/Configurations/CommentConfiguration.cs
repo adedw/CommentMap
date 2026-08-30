@@ -11,6 +11,8 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         builder.HasKey(c => c.Id);
 
+        builder.HasQueryFilter(c => !c.IsDeleted);
+
         builder.HasOne(c => c.User)
             .WithMany(u => u.Comments)
             .HasForeignKey(c => c.UserId)
@@ -25,6 +27,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment>
         builder.Property(c => c.IsDeleted).HasDefaultValue(false);
 
         builder.HasIndex(c => c.Title);
+
+        builder.HasIndex(c => c.IsDeleted)
+            .HasFilter("\"IsDeleted\" = false")
+            .HasDatabaseName("IX_Comments_IsDeleted_Filtered");
 
         builder.HasOne(c => c.Country)
             .WithMany(c => c.Comments)

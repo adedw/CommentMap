@@ -16,9 +16,14 @@ public class ConfirmDeleteModel(IQueryHandler<GetCommentTitleQuery, string?> get
     [BindProperty(SupportsGet = true)]
     public Guid Id { get; set; }
 
-    public async Task<PageResult> OnGetAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
     {
         Title = await getCommentTitleQueryHandler.Handle(new GetCommentTitleQuery(Id), cancellationToken);
+        if (Title is null)
+        {
+            return NotFound();
+        }
+
         return Page();
     }
 
