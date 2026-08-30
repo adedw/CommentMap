@@ -1,0 +1,40 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Country";
+}
+
+@if (ModelState.ErrorCount > 0)
+{
+    <div asp-validation-summary="All" role="alert"></div>
+    return;
+}
+
+@if (Model.Country is null)
+{
+    <h1 class="text-2xl font-bold">Oops... There is no country with code &quot;@Model.ISO3Code&quot;</h1>
+    return;
+}
+
+<div class="overflow-x-auto">
+    <table class="table table-zebra">
+        <tbody>
+            <tr>
+                <th scope="row">ISO 3166-1 alpha-3</th>
+                <td>@Model.Country.ISO3Code</td>
+            </tr>
+            <tr>
+                <th scope="row">ISO 3166-1 alpha-2</th>
+                <td>@Model.Country.ISO2Code</td>
+            </tr>
+            <tr>
+                <th scope="row">Name</th>
+                <td>@Model.Country.Name</td>
+            </tr>
+            <tr>
+                <th scope="row">Local name</th>
+                <td>@Model.Country.LocalName</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

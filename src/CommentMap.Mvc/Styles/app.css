@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: corporate --default, business --prefersdark;
+  logs: false;
+}
+
+.input-validation-error {
+  border-color: var(--color-error);
+}
+
+.field-validation-error {
+  color: var(--color-error);
+}
+
+@layer components {
+  .validation-summary-errors {
+    @apply alert alert-error alert-soft;
+  }
+}

@@ -1,0 +1,38 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData[ManageNavPages.ActivePageKey] = ManageNavPages.Index;
+}
+
+<h2 class="text-xl font-bold mb-2">@ViewData["Title"]</h2>
+
+<div class="max-w-md">
+    <form method="post" class="card bg-base-100 border border-base-300 p-6 space-y-4">
+        <div asp-validation-summary="ModelOnly" role="alert"></div>
+
+        <div class="fieldset">
+            <label class="fieldset-label" asp-for="Email">Current email</label>
+            <div class="join w-full">
+                <input asp-for="Email" class="input input-bordered join-item w-full" disabled />
+                <span class="join-item flex items-center px-3 bg-base-200 text-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                </span>
+            </div>
+        </div>
+
+        <div class="fieldset">
+            <label class="fieldset-label" asp-for="Input.NewEmail">New email</label>
+            <input asp-for="Input.NewEmail" class="input input-bordered w-full" placeholder="Please enter your new username." aria-required="true" />
+            <span asp-validation-for="Input.NewEmail" class="field-validation-error text-sm"></span>
+        </div>
+
+        <button type="submit" class="w-full btn btn-lg btn-primary">Change email</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

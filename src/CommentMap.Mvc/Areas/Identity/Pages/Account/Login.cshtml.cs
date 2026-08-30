@@ -1,0 +1,67 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+using CommentMap.Application.Abstractions;
+using CommentMap.Application.Entities;
+using CommentMap.Application.Features.Identity.Commands;
+using CommentMap.Application.Models;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace CommentMap.Mvc.Areas.Identity.Pages.Account;
+
+public class LoginModel(ICommandHandler<LoginUserCommand, LoginResultDto> loginUserCommandHandler, SignInManager<User> signInManager) : PageModel
+{
+    [BindProperty]
+    public InputModel Input { get; set; } = null!;
+
+    public IList<AuthenticationScheme> ExternalLogins { get; set; } = null!;
+
+    public string ReturnUrl { get; set; } = null!;
+
+    public class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = null!;
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = null!;
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
+    }
+
+    public async Task OnGetAsync(string? returnUrl = null, CancellationToken ct = default)
+    {
+        returnUrl ??= Url.Content("~/");
+        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        ReturnUrl = returnUrl;
+    }
+
+    public async Task<IActionResult> OnPostAsync(string? returnUrl = null, CancellationToken ct = default)
+    {
+        returnUrl ??= Url.Content("~/");
+        ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+        if (!ModelState.IsValid)
+            return Page();
+
+        var result = await loginUserCommandHandler.Handle(
+            new LoginUserCommand(Input.Email, Input.Password, Input.RememberMe), ct);
+
+        if (result.Succeeded)
+            return LocalRedirect(returnUrl);
+        if (result.RequiresTwoFactor)
+            return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });
+        if (result.IsLockedOut)
+            return RedirectToPage("./Lockout");
+
+        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        return Page();
+    }
+}
