@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model LoginWith2faModel
 @{
     ViewData["Title"] = "Two-factor authentication";
@@ -10,10 +10,16 @@
 <div class="max-w-md">
     <form method="post" asp-route-returnUrl="@Model.ReturnUrl" class="card bg-base-100 border border-base-300 p-6 space-y-4">
         <input asp-for="RememberMe" type="hidden" />
-        <div asp-validation-summary="ModelOnly" class="text-error" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" role="alert"></div>
         <div class="fieldset">
             <label class="fieldset-label" asp-for="Input.TwoFactorCode">Authenticator code</label>
-            <input asp-for="Input.TwoFactorCode" class="input input-bordered w-full" autocomplete="off" />
+            <label class="otp mt-2">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <input asp-for="Input.TwoFactorCode"
+                       autocomplete="one-time-code" inputmode="numeric"
+                       maxlength="6" pattern="[0-9]{6}" />
+            </label>
             <span asp-validation-for="Input.TwoFactorCode" class="field-validation-error text-sm"></span>
         </div>
         <label class="flex items-center gap-2 cursor-pointer">

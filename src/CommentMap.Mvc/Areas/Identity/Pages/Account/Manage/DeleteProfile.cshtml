@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model DeletePersonalDataModel
 @{
     ViewData["Title"] = "Delete your profile";
@@ -19,7 +19,7 @@
 
 <div class="max-w-md mt-4">
     <form method="post" class="card bg-base-100 border border-base-300 p-6 space-y-4">
-        <div asp-validation-summary="ModelOnly" class="text-error" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" role="alert"></div>
         @if (Model.RequirePassword)
         {
             <div class="fieldset">

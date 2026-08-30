@@ -1,8 +1,7 @@
 namespace CommentMap.Application.Models;
 
-public record CountryDto(
+public record CountryDTO(
     string ISO3Code,
     string ISO2Code,
     string Name,
-    string RegionName,
-    string SubregionName);
+    string LocalName);

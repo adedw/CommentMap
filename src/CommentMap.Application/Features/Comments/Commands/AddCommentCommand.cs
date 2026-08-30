@@ -15,7 +15,7 @@ public sealed class AddCommentHandler(ICommentMapDbContext db) : ICommandHandler
     {
         var point = new Point(command.Longitude, command.Latitude) { SRID = 3857 };
         var iso3Code = await db.Countries
-            .Where(c => c.Boundaries.Intersects(point))
+            .Where(c => c.Shape.Intersects(point))
             .Select(c => c.ISO3Code)
             .FirstOrDefaultAsync(cancellationToken);
 

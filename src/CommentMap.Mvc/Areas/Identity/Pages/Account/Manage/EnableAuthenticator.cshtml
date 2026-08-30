@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model EnableAuthenticatorModel
 @{
     ViewData["Title"] = "Configure authenticator app";
@@ -33,11 +33,17 @@
                 <form method="post" class="card bg-base-100 border border-base-300 p-6 space-y-4">
                     <div class="fieldset">
                         <label class="fieldset-label" asp-for="Input.Code">Verification Code</label>
-                        <input asp-for="Input.Code" class="input input-bordered w-full" autocomplete="off" placeholder="Please enter the code." />
+                        <label class="otp mt-2">
+                            <span></span><span></span><span></span>
+                            <span></span><span></span><span></span>
+                            <input asp-for="Input.Code"
+                                   autocomplete="one-time-code" inputmode="numeric"
+                                   maxlength="6" pattern="[0-9]{6}" />
+                        </label>
                         <span asp-validation-for="Input.Code" class="field-validation-error text-sm"></span>
                     </div>
                     <button type="submit" class="w-full btn btn-lg btn-primary">Verify</button>
-                    <div asp-validation-summary="ModelOnly" class="text-error" role="alert"></div>
+                    <div asp-validation-summary="ModelOnly" role="alert"></div>
                 </form>
             </div>
         </li>

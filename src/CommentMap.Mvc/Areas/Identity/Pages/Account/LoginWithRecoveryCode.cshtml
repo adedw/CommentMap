@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model LoginWithRecoveryCodeModel
 @{
     ViewData["Title"] = "Recovery code verification";
@@ -12,7 +12,7 @@
 </p>
 <div class="max-w-md">
     <form method="post" class="card bg-base-100 border border-base-300 p-6 space-y-4">
-        <div asp-validation-summary="ModelOnly" class="text-error" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" role="alert"></div>
         <div class="fieldset">
             <label class="fieldset-label" asp-for="Input.RecoveryCode">Recovery code</label>
             <input asp-for="Input.RecoveryCode" class="input input-bordered w-full" autocomplete="off" placeholder="RecoveryCode" />

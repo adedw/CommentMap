@@ -9,15 +9,14 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
 {
     public void Configure(EntityTypeBuilder<Country> builder)
     {
-        builder.Property(c => c.Boundaries).HasColumnType("geometry (multipolygon, 3857)");
-        builder.HasIndex(c => c.Boundaries).HasMethod("gist");
-
         builder.HasKey(c => c.ISO3Code);
         builder.Property(c => c.ISO3Code).HasMaxLength(3).HasColumnType("char");
         builder.Property(c => c.ISO2Code).HasMaxLength(2).HasColumnType("char");
 
-        builder.Property(c => c.Name).HasMaxLength(60);
-        builder.Property(c => c.RegionName).HasMaxLength(10);
-        builder.Property(c => c.SubregionName).HasMaxLength(40);
+        builder.Property(c => c.Shape).HasColumnType("geometry (multipolygon, 3857)");
+        builder.HasIndex(c => c.Shape).HasMethod("gist");
+
+        builder.Property(c => c.Name).HasMaxLength(50);
+        builder.Property(c => c.LocalName).HasMaxLength(255);
     }
 }

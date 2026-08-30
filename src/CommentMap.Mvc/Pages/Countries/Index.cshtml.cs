@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CommentMap.Mvc.Pages.Countries;
 
-public class IndexModel(IQueryHandler<GetCountryQuery, CountryDto?> getCountryQueryHandler) : PageModel
+public class IndexModel(IQueryHandler<GetCountryQuery, CountryDTO?> getCountryQueryHandler) : PageModel
 {
     [BindProperty(SupportsGet = true)]
     [Required(ErrorMessage = "ISO 3166-1 alpha-3 code required.")]
@@ -34,8 +34,7 @@ public class IndexModel(IQueryHandler<GetCountryQuery, CountryDto?> getCountryQu
                 ISO3Code = dto.ISO3Code,
                 ISO2Code = dto.ISO2Code,
                 Name = dto.Name,
-                RegionName = dto.RegionName,
-                SubregionName = dto.SubregionName,
+                LocalName = dto.LocalName,
             };
         }
 

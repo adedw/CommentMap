@@ -6,7 +6,7 @@
 
 @if (ModelState.ErrorCount > 0)
 {
-    <div asp-validation-summary="All"></div>
+    <div asp-validation-summary="All" role="alert"></div>
     return;
 }
 
@@ -32,12 +32,8 @@
                 <td>@Model.Country.Name</td>
             </tr>
             <tr>
-                <th scope="row">Region name</th>
-                <td>@Model.Country.RegionName</td>
-            </tr>
-            <tr>
-                <th scope="row">Subregion name</th>
-                <td>@Model.Country.SubregionName</td>
+                <th scope="row">Local name</th>
+                <td>@Model.Country.LocalName</td>
             </tr>
         </tbody>
     </table>

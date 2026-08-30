@@ -12,21 +12,8 @@
   color: var(--color-error);
 }
 
-.validation-summary-errors {
-  background-color: color-mix(in oklab, var(--color-error) 12%, transparent);
-  border-radius: var(--radius-field);
-  border: 1px solid color-mix(in oklab, var(--color-error) 40%, transparent);
-}
-
-.validation-summary-errors > ul {
-  list-style-type: none;
-  padding: 1rem;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.validation-summary-errors > ul > li {
-  color: var(--color-error);
+@layer components {
+  .validation-summary-errors {
+    @apply alert alert-error alert-soft;
+  }
 }
